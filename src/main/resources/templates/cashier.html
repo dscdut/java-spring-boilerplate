@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cashier</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css"
+          integrity="sha512-HK5fgLBL+xu6dm/Ii3z4xhlSUyZgTT9tuc/hSrtw6uzJOvgRr2a9jyxxT1ely+B+xFAmJKVSTbpM/CuL7qxO8w=="
+          crossorigin="anonymous" />
+
+    <link rel="stylesheet" type="text/css" href="/css/reset-style.css"/>
+    <link rel="stylesheet" type="text/css" href="/css/cashier/style.css"/>
+    <link rel="stylesheet" type="text/css" href="/css/toast.css">
+
+
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link
+            href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=Roboto+Slab:wght@100;300;400;500;600;800&display=swap"
+            rel="stylesheet">
+    <link rel="shortcut icon" type="image/png" href="/images/logo-club.png"/>
+    <script src="/js/config.js"></script>
+</head>
+
+<body>
+    <div class="header">
+        <div class="header-with-search">
+            <div class="header__logo"></div>
+            <div class="header__search" id="search-header">
+                <div class="header__search-wrap" id="search-wrap">
+                    <input id="search-bar" type="text" class="header__search-input" placeholder="Tìm món">
+                    <div class="header_search-product" id="search-products">
+                        <ul class="header_search-product-list" id="search-list">
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="header-right">
+            <span class="user-name" th:text="${email}"></span>
+            <div class="list-bar">
+                <i class="fas fa-bars"></i>
+                <div class="list-bar-popover">
+                    <ul>
+                        <li>
+                            <a href="/admin">
+                                <i class="far fa-list-alt"></i>
+                                <span>Quản lý</span>
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="/logout">
+                                <i class="fas fa-external-link-alt"></i>
+                                <span>Đăng xuất</span>
+                            </a>
+                        </li>
+
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class=" main main1">
+            <div class="main__header">
+                <button class="btn" type="button" onclick="ShowTable()">
+                    <i class="fas fa-table"></i>
+                    Bàn
+                </button>
+                <button class="btn" type="button" onclick="ShowMenu()">
+                    <i class="fas fa-bars"></i>
+                    Menu
+                </button>
+            </div>
+            <div class="main__categories-filter">
+                <div class="main__categories" id="table_types">
+                    <span >Tất cả</span>
+                    <span th:each="tableType : ${tableTypes}" th:text="${tableType.name}" th:attr="type-id=${tableType.id}"></span>
+                </div>
+                <div class="main__categories" id="product_categories">
+                    <span>Tất cả</span>
+                    <span th:each="category : ${categories}"
+                        th:text = "${category.name}"
+                        th:attr="category-id=${category.id}"></span>
+                </div>
+            </div>
+
+            <div class="main__ListItem">
+                <div class="list-menu" id="list-menu">
+                </div>
+
+                <div class="list-table" id="list-table">
+                </div>
+            </div>
+        </div>
+
+
+        <div class="main main2" id="bill-board">
+            <div class="main2__header">
+
+                <div class="table-info">
+                    <i class="fas fa-table"></i>
+                    <span id="bill_table-name">Bàn</span>
+                </div>
+
+                <div class="bill-wrap">
+                    <button class="btn" type="button">
+                        <i class="fas fa-receipt"></i>
+                        <span id="droplist-label-show">Hóa đơn</span>
+                    </button>
+                    <button class="btn-drop" onclick="BillDrop()">
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                </div>
+                <div class="bill-drop" id="bill-drop">
+                    <ul class="droplist" id="bill-drop-list">
+                    </ul>
+                    <button class="btnAddLi" onclick="addBill()">
+                        <i class="fas fa-plus-circle"></i>
+                    </button>
+                </div>
+            </div>
+
+
+            <div class="main20">
+            </div>
+
+            <div class="product-cart-list" id="product-cart-list">
+
+            </div>
+            <div class="main__footer-wrap">
+                <div class="main2__payment-info" id="main2__payment-info">
+                    <button class="payment-action-btn">Tách đơn - Chuyển bàn</button>
+                    <button class="payment-action-btn update-btn" id="update-bill-btn">Cập nhật</button>
+                    <div class="popover-merge-split-bill">
+                        <div class="merge-split-bill-wrap">
+
+                            <div id="modal-title" class="title">
+                                <p>Hóa đơn 1 - Bàn 1</p>
+                            </div>
+
+                            <div class="checkbox-changing">
+                                <label class="container">Tách đơn
+                                    <input type="radio" id="split-bill" class="radio" name="radio" value="split">
+                                    <span class="checkmark"></span>
+                                </label>
+                                <label class="container"> Chuyển bàn
+                                    <input type="radio" id="transfer -table" class="radio" name="radio" value="transfer">
+                                    <span class="checkmark"></span>
+                                </label>
+                            </div>
+
+                            <div class="split-bill-wrap">
+                                <div class="choose-changing">
+                                    <p>Tách đến</p>
+                                    <div class="droplist-select" id = "droplist-split1">
+                                        <span>Chon hóa đơn</span>
+                                        <i class="fas fa-sort-down"></i>
+                                    </div>
+                                </div>
+
+                                <div class="popover-bill" id = "popover-split1" >
+                                </div>
+
+                                <div class="popover-bill" id = "popover-split2">
+                                </div>
+
+                                <div class="cart-list-split-bill" id="split-bill-table">
+                                    <div class="header">
+                                        <div class="col1">
+                                            Khác
+                                        </div>
+                                        <div class="col2">
+                                            SL trên đơn gốc
+                                        </div>
+                                        <div class="col3">
+                                            SL tách
+                                        </div>
+                                    </div>
+                                    <div class="list-row">
+                                    </div>
+                                </div>
+
+
+                            </div>
+                            <div class="transfer-table-wrap">
+                                <div class="choose-changing">
+                                    <p>Phòng bàn</p>
+                                    <div class="droplist-select" id = "droplist-transfer">
+                                        <span></span>
+                                        <i class="fas fa-sort-down"></i>
+                                    </div>
+                                </div>
+                                <div class="popover-bill" id = "popover-transfer">
+
+                                </div>
+
+                                <div class="choose-bill" id = "choose-bill-transfer">
+                                    <table>
+                                        <thead>
+                                        <tr>
+                                            <td>Mã đơn</td>
+                                            <td>Số lượng </td>
+                                            <td>Tổng tiền</td>
+                                        </tr>
+                                        </thead>
+
+                                        <tbody>
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                            </div>
+                            <div class="footer">
+                                <button class="btn btn-done">Thực hiện</button>
+                                <button class="btn btn-skip">Bỏ qua</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="payment-info">
+                        <span>Tổng tiền</span>
+                        <span class="quantity-order" id="quantity-order">0</span>
+                        <span class="total-price" id="total-price">0</span>
+                    </div>
+
+                </div>
+                <div class="main2__footer main2__footer-get-total" id="get-payment-btn">
+                    <button class="main2-btn" type="button" onclick="PaymentButtonClick()">
+                        <i class="fas fa-dollar-sign"></i>
+                        Thanh Toán
+                    </button>
+                </div>
+                <div class="main2__footer main2__footer-open-bill" id="open-bill-btn">
+                    <button class="main2-btn" type="button" onclick="createBill()">
+                        Bắt đầu
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="price-change-wrap" id="price-change-wrap">
+        <div class="price-change">
+            <form name="price" class="caculator">
+                <div class="change-new-price">
+                    <label for="new-price">Giá mới</label>
+                    <input type="text" name="txt" id="new-price" class="Price-Input" value="">
+                </div>
+
+                <div class="discount">
+                    <label for="discount">Giảm giá</label>
+                    <input type="text" name="txt1" class="Price-Input" id="discount" onkeydown="return false">
+                    <button type='button' class="success" id="vnd">VNĐ</button>
+                    <button type='button' id="percent">%</button>
+                </div>
+                <span class="num numprice" >7</span>
+                <span class="num numprice" >8</span>
+                <span class="num numprice" >9</span>
+                <span class="num numprice" >4</span>
+                <span class="num numprice" >5</span>
+                <span class="num numprice" >6</span>
+                <span class="num numprice" >1</span>
+                <span class="num numprice" >2</span>
+                <span class="num numprice" >3</span>
+                <span class="num numprice" >.</span>
+                <span class="num numprice" >0</span>
+                <span class="num numprice" >
+                        <i class="fas fa-backspace"></i>
+                    </span>
+
+            </form>
+            <div class="action-wrap">
+                <button id="caculator-done-btn" class="btn btn-done" translate="">
+                    Xong
+                </button>
+                <button class="btn btn-skip" translate="">
+                    Bỏ qua
+                </button>
+            </div>
+
+        </div>
+    </div>
+    <div class="Quantity-Change-wrap" id="Quantity-Change-wrap">
+    <div class="Quantity-Change">
+        <form name="calc" class="caculator">
+            <input type="text" name="txt" class="Quantity-Change-Value" id="Quantity-Change-Value" value=""
+                   disabled>
+            <span class="num" onclick="document.calc.txt.value += '7'">7</span>
+            <span class="num" onclick="document.calc.txt.value += '8'">8</span>
+            <span class="num" onclick="document.calc.txt.value += '9'">9</span>
+            <span class="num" onclick="document.calc.txt.value += '4'">4</span>
+            <span class="num" onclick="document.calc.txt.value += '5'">5</span>
+            <span class="num" onclick="document.calc.txt.value += '6'">6</span>
+            <span class="num" onclick="document.calc.txt.value += '1'">1</span>
+            <span class="num" onclick="document.calc.txt.value += '2'">2</span>
+            <span class="num" onclick="document.calc.txt.value += '3'">3</span>
+            <span class="num" onclick="document.calc.txt.value += '.'">.</span>
+            <span class="num" onclick="document.calc.txt.value += '0'">0</span>
+            <span class="num"
+                  onclick="document.calc.txt.value =  document.calc.txt.value.substr(0, document.calc.txt.value.length - 1);'-'">
+                    <i class="fas fa-backspace"></i>
+            </span>
+
+        </form>
+        <div class="action-wrap">
+            <button class="btn btn-done" translate="">
+                Xong
+            </button>
+            <button class="btn btn-skip" translate="">
+                Bỏ qua
+            </button>
+        </div>
+    </div>
+</div>
+    <div class="payment">
+        <div class="payment-wrap">
+            <div class="title-payment">
+                <p>Phiếu thanh toán - <span></span></p>
+                <button type="button" onclick="ClosePayment()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="main-payment">
+                <div class="left-payment">
+                    <div class="group-name">
+                        <i class="fas fa-table"></i>
+                        <span id="name-table-payment"></span>
+                    </div>
+                    <div class="product-cart-list">
+                        <div class="title-products">
+                            <p>Dịch vụ</p>
+                        </div>
+                        <div id="payment-item">
+                        </div>
+                    </div>
+                </div>
+                <div class="right-payment">
+                    <div class="payment-header">
+                        <p id="time-click-payment"></p>
+                        <i class="far fa-calendar-minus"></i>
+                        <i class="far fa-clock"></i>
+                    </div>
+                    <div class="form-group">
+                        <div class="form-label">
+                            <p>Tổng tiền hàng</p>
+                            <span class="quantity-order" id="quantity-order-payment"></span>
+                        </div>
+                        <div class="form-output">
+                            <p id="total-price-payment"></p>
+                        </div>
+                    </div>
+                    <div class="form-group form-discount">
+                        <div class="form-label">
+                            <p>Giảm giá</p>
+                            <span></span>
+                        </div>
+                        <div class="form-output ">
+                            <p onclick="PopoverDiscount()" id="discount-price"> 0 </p>
+                        </div>
+                        <div class="popover-discount">
+                            <label for="discount-payment">Giảm giá</label>
+                            <input type="text" id="discount-payment" value="" onkeyup="setCommaForInput(this)">
+                            <button type='button' class="btn btn-vnd" id="vnd-btn">VNĐ</button>
+                            <button type='button' class="btn btn-percent" id="percent-btn">%</button>
+                        </div>
+                    </div>
+                    <div class="form-group ">
+                        <div class="form-label">
+                            <p>Khách cần trả</p>
+                        </div>
+                        <div class="form-output">
+                            <p id="price-need-to-pay">0 </p>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="form-label">
+                            <p>Tiền khách đưa</p>
+                        </div>
+                        <div class="form-output text-hightlight">
+                            <input type="text" value="0" id="payingAmountTxt" onkeyup="setCommaForInput(this)">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="form-label">
+                            <p>Tiền thừa trả khách</p>
+                        </div>
+                        <div class="form-output text-hightlight">
+                            <p id="price-return"> </p>
+                        </div>
+                    </div>
+                    <div class="payment-footer">
+                        <button type="button" class="main2-btn" id="print-button">
+                            <i class="fas fa-print"></i>
+                            In hóa đơn
+                        </button>
+                        <button type="button" class="main2-btn" id="payment-button">
+                            <i class="fas fa-dollar-sign"></i>
+                            Thanh toán
+                        </button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+        <div class="modal-user-infor cancel-reason">
+            <div class="overlay"></div>
+            <div class="modal-container">
+                <div class="form-container modal">
+                    <div class="modal-header row--base">
+                        <h2 id="cancel-title">Xác nhận hủy món</h2>
+                        <span class="close-modal"><i class="fa fa-times"></i></span>
+                    </div>
+                    <div class="modal-header row--base reason-row">
+                        <h4 id="cancel-ask">Bạn có chắc chắn muốn hủy <span id="cancel-item"></span> không</h4>
+                    </div>
+                    <div class="form-login">
+                        <div class="modal__form-group modal-row">
+                            <p>Lý do</p>
+                            <textarea placeholder="Nhập lý do..." class="form__input" required></textarea>
+                        </div>
+                        <div class="modal-ctrl modal-row">
+                            <p class="close-modal">Bỏ qua</p>
+                            <button id="confirm-remove" class="m-btn btn-modal">Chắc chắn</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    <div id="toast">
+    </div>
+    <script src="/js/cashier/tables.js"></script>
+    <script src="/js/cashier/products.js"></script>
+    <script src="/js/cashier/bill.js"></script>
+    <script src="/js/cashier/script.js"></script>
+    <script src="/js/cashier/cashier-payment.js"></script>
+    <script src="/js/cashier/cashier-bill.js"></script>
+    <script src="/js/cashier/modal.js"></script>
+</body>
+</html>

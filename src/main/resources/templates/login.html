@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en"xmlns:th="https://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css"
+          integrity="sha512-HK5fgLBL+xu6dm/Ii3z4xhlSUyZgTT9tuc/hSrtw6uzJOvgRr2a9jyxxT1ely+B+xFAmJKVSTbpM/CuL7qxO8w=="
+          crossorigin="anonymous" />
+
+    <link rel="stylesheet" type="text/css" th:href="@{/css/reset-style.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/login.css}"/>
+
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link
+            href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=Roboto+Slab:wght@100;300;400;500;600;800&display=swap"
+            rel="stylesheet">
+    <link rel="shortcut icon" type="image/png" href="/images/logo-club.png"/>
+    <script src="/js/config.js"></script>
+</head>
+
+<body>
+<div class="block--center">
+    <div class="block--info">
+
+    </div>
+    <div class="block--content">
+
+        <div class="form-field__welcome">
+            <h2>CHÀO MỪNG TRỞ LẠI</h2>
+        </div>
+
+        <div class="form-field__content">
+            <div class="login-label--info">
+                <p>PBL3 Billiards</p>
+            </div>
+
+            <div class="message" id="login-error">
+
+            </div>
+
+            <form id="login">
+                <div class="form-field">
+                    <label class="label" for="userName" >Tài khoản</label>
+                    <input type="email" id="userName" name ="email" placeholder="E-mail" required>
+                </div>
+                <div class="form-field">
+                    <label class="label" for="password">Mật khẩu</label>
+                    <input type="password" id="password" name="password" placeholder="Password" minlength="6" required>
+                </div>
+                <div>
+                    <button type="submit" class="btn">Đăng nhập</button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
+<script src="/js/login/script.js"></script>
+</body>
+
+</html>
