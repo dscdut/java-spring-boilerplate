@@ -17,6 +17,8 @@ spring:
         hibernate.format_sql: true
 
 springdoc:
+  swagger-ui:
+    path: /api-docs
   show-actuator: true
   paths-to-match: /**
   packages-to-scan: com.gdsc.boilerplate.springboot
