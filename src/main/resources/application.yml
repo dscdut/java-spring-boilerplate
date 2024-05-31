@@ -1,0 +1,52 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://${POSTGRES_DB_SERVER_ADDRESS:localhost}:${POSTGRES_DB_SERVER_PORT:5432}/${POSTGRES_DB:boilerplate}
+    username: ${POSTGRES_USER:hungpham28}
+    password: ${POSTGRES_PASSWORD:123456}
+
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: create
+      show-sql: true
+      format-sql: true
+      type: info
+      use-sql-comments: true
+      properties:
+        hibernate.use_sql_comments: true
+        hibernate.format_sql: true
+
+springdoc:
+  show-actuator: true
+  paths-to-match: /**
+  packages-to-scan: com.gdsc.boilerplate.springboot
+
+management:
+  endpoint:
+    health:
+      show-details: ALWAYS
+    endpoints:
+      web:
+        exposure:
+          include: "*"
+
+logging:
+  level:
+    org.springframework: INFO
+    com.farukgenc.boilerplate.springboot: INFO
+
+## FIXME : Customize JWT token and Swagger information for your application
+
+jwt:
+  secretKey: secret
+  expirationMinute: 10
+
+swagger:
+  contact-name: GDSC DUT
+  contact-mail: dsc.dut@gmail.com
+  contact-url: https://gdsc.community.dev/
+  app-name: Spring Boot Boilerplate Project
+  app-description: "Spring Boot Boilerplate is a starter kit. This project includes : Spring Boot(2.7.10), Spring Data JPA, Spring Validation, Spring Security + JWT Token, PostgreSQL, Mapstruct, Lombok, Swagger"
+  app-version: 1.0.0
+  app-license-url: https://www.apache.org/licenses/LICENSE-2.0.html
+  app-license: Apache 2.0
