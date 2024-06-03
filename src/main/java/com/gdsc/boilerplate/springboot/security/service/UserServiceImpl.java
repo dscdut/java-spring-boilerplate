@@ -1,5 +1,6 @@
 package com.gdsc.boilerplate.springboot.security.service;
 
+import com.gdsc.boilerplate.springboot.exceptions.InternalServerException;
 import com.gdsc.boilerplate.springboot.model.User;
 import com.gdsc.boilerplate.springboot.model.UserRole;
 import com.gdsc.boilerplate.springboot.repository.UserRepository;
@@ -8,10 +9,12 @@ import com.gdsc.boilerplate.springboot.security.dto.RegistrationRequest;
 import com.gdsc.boilerplate.springboot.security.dto.RegistrationResponse;
 import com.gdsc.boilerplate.springboot.security.mapper.UserMapper;
 import com.gdsc.boilerplate.springboot.service.UserValidationService;
+import com.gdsc.boilerplate.springboot.utils.ExceptionMessageAccessor;
 import com.gdsc.boilerplate.springboot.utils.GeneralMessageAccessor;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -30,6 +33,9 @@ public class UserServiceImpl implements UserService {
 
 	private final GeneralMessageAccessor generalMessageAccessor;
 
+	@Autowired
+	private ExceptionMessageAccessor exceptionMessageAccessor;
+
 	@Override
 	public User findByUsername(String username) {
 
@@ -45,14 +51,19 @@ public class UserServiceImpl implements UserService {
 		user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
 		user.setUserRole(UserRole.USER);
 
-		userRepository.save(user);
+		try{
+			User savedUser = userRepository.save(user);
+			Long userId = savedUser.getId();
 
-		final String username = registrationRequest.getEmail();
-		final String registrationSuccessMessage = generalMessageAccessor.getMessage(null, REGISTRATION_SUCCESSFUL, username);
+			final String username = registrationRequest.getFull_name();
+			final String email = registrationRequest.getEmail();
 
-		log.info("{} registered successfully!", username);
+			log.info("{} registered successfully!", username);
 
-		return new RegistrationResponse(registrationSuccessMessage);
+			return new RegistrationResponse(userId,email,username);
+		}catch (Exception e){
+			throw new InternalServerException( exceptionMessageAccessor);
+		}
 	}
 
 	@Override
