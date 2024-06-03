@@ -11,12 +11,11 @@ public class CustomControllerAdvice {
 	@ExceptionHandler(CustomException.class)
 	ResponseEntity<ApiExceptionResponse> handleCustomException(CustomException exception) {
 
-		final ApiExceptionResponse response = new ApiExceptionResponse(exception.getErrorMessage(), 
-				exception.getCode());
+		final ApiExceptionResponse response = new ApiExceptionResponse(exception.getCode(),exception.getErrorMessage());
 
 		return ResponseEntity.status(toHttpStatus(exception.getCode())).body(response);
 	}
-	
+
 	private HttpStatus toHttpStatus(int code) {
 		switch (code) {
 		case 101:
@@ -26,6 +25,8 @@ public class CustomControllerAdvice {
 		case 103:
 			return HttpStatus.INTERNAL_SERVER_ERROR;
 		case 104:
+			return HttpStatus.BAD_REQUEST;
+		case 108:
 			return HttpStatus.CONFLICT;
 
 		}

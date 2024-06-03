@@ -12,10 +12,8 @@ import java.util.List;
 @AllArgsConstructor
 public class ValidationErrorResponse {
 
-	private int code;
+	private int error_code;
 
-	private String message;
-	
-	private List<String> details;
+	private List<String> message;
 
 }
