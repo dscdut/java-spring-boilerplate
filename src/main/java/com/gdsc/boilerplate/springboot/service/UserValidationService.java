@@ -1,6 +1,7 @@
 package com.gdsc.boilerplate.springboot.service;
 
 import com.gdsc.boilerplate.springboot.exceptions.CustomException;
+import com.gdsc.boilerplate.springboot.exceptions.EmailAlreadyExistsException;
 import com.gdsc.boilerplate.springboot.exceptions.ExceptionConstants;
 import com.gdsc.boilerplate.springboot.repository.UserRepository;
 import com.gdsc.boilerplate.springboot.security.dto.RegistrationRequest;
@@ -34,11 +35,7 @@ public class UserValidationService {
 		if (existsByEmail) {
 
 			log.warn("{} is already being used!", email);
-
-			final String existsEmail = exceptionMessageAccessor.getMessage(null, 
-					ExceptionConstants.EMAIL_ALREADY_EXISTS.getMessageName());
-			
-			throw new CustomException(ExceptionConstants.EMAIL_ALREADY_EXISTS.getCode(), existsEmail);
+			throw new EmailAlreadyExistsException( exceptionMessageAccessor);
 		}
 	}
 

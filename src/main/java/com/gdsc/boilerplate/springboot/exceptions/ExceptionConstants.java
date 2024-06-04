@@ -6,9 +6,10 @@ public enum ExceptionConstants {
 	INVALID_AUTHENTICATED(102, "invalid_authentication"),
 
 	INTERNAL_SERVER_ERROR(103, "internal_server_error"),
-	
-    EMAIL_ALREADY_EXISTS(104, "email_already_exists");
-			
+    BAD_REQUEST(104, "Invalid_syntax"),
+
+    EMAIL_ALREADY_EXISTS(108, "email_already_exists");
+
     private final int code;
     private final String messageName;
 

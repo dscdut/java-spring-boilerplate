@@ -1,6 +1,8 @@
 package com.gdsc.boilerplate.springboot.exceptions;
 
+import com.gdsc.boilerplate.springboot.utils.ExceptionMessageAccessor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,11 +27,10 @@ public class ValidationAdvice {
 				.collect(Collectors.toList());
 
 		final ValidationErrorResponse validationErrorResponse = new ValidationErrorResponse(
-				ExceptionConstants.INVALID_INPUT_DATA.getCode(), "Invalid input data!", errorList);
+				ExceptionConstants.INVALID_INPUT_DATA.getCode(), errorList);
 
 		log.warn("Validation errors : {} , Parameters : {}", errorList, exception.getBindingResult().getTarget());
 
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(validationErrorResponse);
 	}
-
 }
