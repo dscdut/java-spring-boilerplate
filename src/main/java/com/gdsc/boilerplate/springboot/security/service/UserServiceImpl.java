@@ -33,9 +33,6 @@ public class UserServiceImpl implements UserService {
 
 	private final GeneralMessageAccessor generalMessageAccessor;
 
-	@Autowired
-	private ExceptionMessageAccessor exceptionMessageAccessor;
-
 	@Override
 	public User findByUsername(String username) {
 
@@ -62,7 +59,7 @@ public class UserServiceImpl implements UserService {
 
 			return new RegistrationResponse(userId,email,username);
 		}catch (Exception e){
-			throw new InternalServerException( exceptionMessageAccessor);
+			throw new InternalServerException();
 		}
 	}
 

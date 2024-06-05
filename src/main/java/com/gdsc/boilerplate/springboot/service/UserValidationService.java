@@ -1,11 +1,8 @@
 package com.gdsc.boilerplate.springboot.service;
 
-import com.gdsc.boilerplate.springboot.exceptions.CustomException;
 import com.gdsc.boilerplate.springboot.exceptions.EmailAlreadyExistsException;
-import com.gdsc.boilerplate.springboot.exceptions.ExceptionConstants;
 import com.gdsc.boilerplate.springboot.repository.UserRepository;
 import com.gdsc.boilerplate.springboot.security.dto.RegistrationRequest;
-import com.gdsc.boilerplate.springboot.utils.ExceptionMessageAccessor;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,8 +14,6 @@ import org.springframework.stereotype.Service;
 public class UserValidationService {
 
 	private final UserRepository userRepository;
-
-	private final ExceptionMessageAccessor exceptionMessageAccessor;
 
 	public void validateUser(RegistrationRequest registrationRequest) {
 
@@ -35,7 +30,7 @@ public class UserValidationService {
 		if (existsByEmail) {
 
 			log.warn("{} is already being used!", email);
-			throw new EmailAlreadyExistsException( exceptionMessageAccessor);
+			throw new EmailAlreadyExistsException();
 		}
 	}
 
