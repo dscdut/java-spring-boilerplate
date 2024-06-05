@@ -24,7 +24,7 @@ public class RegistrationController {
 
 
 	@PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<?> registrationRequest(@Valid @RequestBody RegistrationRequest registrationRequest,
+	public ResponseEntity<RegistrationResponse> registrationRequest(@Valid @RequestBody RegistrationRequest registrationRequest,
 			BindingResult bindingResult) {
 		if (!registrationRequest.getPassword().equals(registrationRequest.getConfirm_password())) {
 			throw new InvalidSyntaxRegistrationException();
