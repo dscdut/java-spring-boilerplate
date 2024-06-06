@@ -17,4 +17,7 @@ public interface UserService {
 	RegistrationResponse registration(RegistrationRequest registrationRequest);
 
 	AuthenticatedUserDto findAuthenticatedUserByUsername(String username);
+	
+	void deleteUserById(Long id);
+
 }

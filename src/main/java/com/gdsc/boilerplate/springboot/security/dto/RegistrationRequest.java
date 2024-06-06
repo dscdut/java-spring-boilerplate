@@ -17,7 +17,7 @@ public class RegistrationRequest {
 	@NotEmpty(message = "{registration_name_not_empty}")
 	private String full_name;
 
-	@Email(message = "{registration_email_invalid_syntax}")
+	@Email(message = "{registration_email_not_invalid}")
 	@NotEmpty(message = "{registration_email_not_empty}")
 	private String email;
 

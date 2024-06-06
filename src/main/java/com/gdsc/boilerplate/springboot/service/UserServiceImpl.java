@@ -1,5 +1,6 @@
 package com.gdsc.boilerplate.springboot.service;
 
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Service;
 import com.gdsc.boilerplate.springboot.configuration.dto.PageDto;
 import com.gdsc.boilerplate.springboot.configuration.dto.user.UserDto;
 import com.gdsc.boilerplate.springboot.exceptions.InternalServerException;
+import com.gdsc.boilerplate.springboot.exceptions.UserIdNotExistsException;
 import com.gdsc.boilerplate.springboot.maper.user.UserMapper;
 import com.gdsc.boilerplate.springboot.model.User;
 import com.gdsc.boilerplate.springboot.model.UserRole;
@@ -84,5 +86,20 @@ public class UserServiceImpl implements UserService {
 		pageDto.setData(page.getContent().stream().map(user -> UserMapper.INSTANCE.convertToUserDto(user))
 				.collect(Collectors.toList()));
 		return pageDto;
+	}
+
+	@Override
+	public void deleteUserById(Long id) {
+		final Optional<User> optionalUser = userRepository.findById(id);
+
+		if (optionalUser.isEmpty()) {
+			throw new UserIdNotExistsException();
+		}
+
+		try {
+			userRepository.deleteById(id);
+		} catch (Exception e) {
+			throw new InternalServerException();
+		}
 	}
 }

@@ -4,7 +4,8 @@ import com.gdsc.boilerplate.springboot.exceptions.ApiExceptionResponse;
 import com.gdsc.boilerplate.springboot.exceptions.ExceptionConstants;
 import com.gdsc.boilerplate.springboot.exceptions.InternalServerException;
 import com.gdsc.boilerplate.springboot.exceptions.InvalidAuthenticationException;
-import com.gdsc.boilerplate.springboot.exceptions.InvalidSyntaxLoginException;
+import com.gdsc.boilerplate.springboot.exceptions.InvalidSyntaxException;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -34,11 +35,7 @@ public class LoginController {
 	private final ExceptionMessageAccessor accessor;
 	
 	@PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<LoginResponse> loginRequest(@Valid @RequestBody LoginRequest loginRequest,
-			BindingResult bindingResult) {
-		if (bindingResult.hasErrors()) {
-			throw new InvalidSyntaxLoginException();
-		}
+	public ResponseEntity<LoginResponse> loginRequest(@Valid @RequestBody LoginRequest loginRequest) {
 		try {
 			final LoginResponse loginResponse = jwtTokenService.getLoginResponse(loginRequest);
 			return ResponseEntity.ok(loginResponse);
@@ -60,13 +57,4 @@ public class LoginController {
 		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
 	}
 	
-	@ExceptionHandler(InvalidSyntaxLoginException.class)
-	@ResponseStatus(HttpStatus.BAD_REQUEST)
-	ResponseEntity<ApiExceptionResponse> handleInvalidSyntaxLoginException(InvalidSyntaxLoginException exception) {
-
-		final ApiExceptionResponse response = new ApiExceptionResponse(ExceptionConstants.INVALID_INPUT_LOGIN.getCode(),
-				accessor.getMessage(null, ExceptionConstants.INVALID_INPUT_LOGIN.getMessageName()));
-		log.warn("InvalidSyntaxLoginException: {}", response.getMessage());
-		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
-	}
 }

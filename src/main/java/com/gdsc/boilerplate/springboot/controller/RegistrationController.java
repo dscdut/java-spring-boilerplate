@@ -29,15 +29,11 @@ public class RegistrationController {
 	private final ExceptionMessageAccessor accessor;
 	
 	@PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<RegistrationResponse> registrationRequest(@Valid @RequestBody RegistrationRequest registrationRequest,
-			BindingResult bindingResult) {
+	public ResponseEntity<RegistrationResponse> registrationRequest(@Valid @RequestBody RegistrationRequest registrationRequest) {
 		if (!registrationRequest.getPassword().equals(registrationRequest.getConfirm_password())) {
-			throw new InvalidSyntaxRegistrationException();
+			throw new InvalidSyntaxException();
 		}
 
-		if (bindingResult.hasErrors() && bindingResult.getFieldError().getField().equals("email")) {
-			throw new InvalidSyntaxRegistrationException();
-		}
 		final RegistrationResponse registrationResponse = userService.registration(registrationRequest);
 
 		return ResponseEntity.status(HttpStatus.CREATED).body(registrationResponse);
@@ -56,14 +52,14 @@ public class RegistrationController {
 		return ResponseEntity.status(HttpStatus.CONFLICT).body(response);
 	}
 
-	@ExceptionHandler(InvalidSyntaxRegistrationException.class)
+	@ExceptionHandler(InvalidSyntaxException.class)
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	ResponseEntity<ApiExceptionResponse> handleInvalidSyntaxRegistrationException(
-			InvalidSyntaxRegistrationException exception) {
+			InvalidSyntaxException exception) {
 
 		final ApiExceptionResponse response = new ApiExceptionResponse(
-				ExceptionConstants.INVALID_INPUT_REGISTRATION.getCode(),
-				accessor.getMessage(null, ExceptionConstants.INVALID_INPUT_REGISTRATION.getMessageName()));
+				ExceptionConstants.INVALID_SYNTAX.getCode(),
+				accessor.getMessage(null, ExceptionConstants.INVALID_SYNTAX.getMessageName()));
 		log.warn("InvalidSyntaxRegistrationException: {}", response.getMessage());
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
 	}

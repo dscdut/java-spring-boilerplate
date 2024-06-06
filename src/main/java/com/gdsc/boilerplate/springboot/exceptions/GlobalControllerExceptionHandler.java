@@ -45,10 +45,10 @@ public class GlobalControllerExceptionHandler {
 		}
 
 		final ValidationExceptionResponse response = new ValidationExceptionResponse();
-		response.setError_code(ExceptionConstants.INVALID_INPUT_REGISTRATION.getCode());
-		response.setMessage(accessor.getMessage(null, ExceptionConstants.INVALID_INPUT_REGISTRATION.getMessageName()));
+		response.setError_code(ExceptionConstants.INVALID_SYNTAX.getCode());
+		response.setMessage(accessor.getMessage(null, ExceptionConstants.INVALID_SYNTAX.getMessageName()));
 		response.setDetails(errors);
-		log.warn("InvalidSyntaxRegistrationException: {}", response.getMessage());
+		log.warn("InvalidSyntaxException: {}", response.getMessage());
 
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
 	}
@@ -63,11 +63,24 @@ public class GlobalControllerExceptionHandler {
 		}
 
 		final ValidationExceptionResponse response = new ValidationExceptionResponse();
-		response.setError_code(ExceptionConstants.INVALID_INPUT_REGISTRATION.getCode());
-		response.setMessage(accessor.getMessage(null, ExceptionConstants.INVALID_INPUT_REGISTRATION.getMessageName()));
+		response.setError_code(ExceptionConstants.INVALID_SYNTAX.getCode());
+		response.setMessage(accessor.getMessage(null, ExceptionConstants.INVALID_SYNTAX.getMessageName()));
 		response.setDetails(errors);
 
 		log.warn("ConstraintViolationException: {}", response.getMessage());
+
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+	}
+	
+	@ExceptionHandler(value = { InvalidSyntaxException.class })
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	public ResponseEntity<ValidationExceptionResponse> handleInvalidSyntaxExceptions(InvalidSyntaxException ex) {
+
+		final ValidationExceptionResponse response = new ValidationExceptionResponse();
+		response.setError_code(ExceptionConstants.INVALID_SYNTAX.getCode());
+		response.setMessage(accessor.getMessage(null, ExceptionConstants.INVALID_SYNTAX.getMessageName()));
+		response.setDetails(ex.getErrors());
+		log.warn("InvalidSyntaxException: {}", response.getMessage());
 
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
 	}
