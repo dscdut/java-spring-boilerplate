@@ -22,7 +22,6 @@ public class UserController {
     @SneakyThrows
     @DeleteMapping(value="/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> deleteUser(@PathVariable String id) {
-        BindingResult bindingResult = new DataBinder(id).getBindingResult();
         try {
             final Long idLong = Long.parseLong(id);
             userService.deleteUserById(idLong);
