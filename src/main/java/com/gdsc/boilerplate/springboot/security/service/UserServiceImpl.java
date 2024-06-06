@@ -1,5 +1,6 @@
 package com.gdsc.boilerplate.springboot.security.service;
 
+import com.gdsc.boilerplate.springboot.exceptions.UserIdNotExistsException;
 import com.gdsc.boilerplate.springboot.exceptions.InternalServerException;
 import com.gdsc.boilerplate.springboot.model.User;
 import com.gdsc.boilerplate.springboot.model.UserRole;
@@ -9,14 +10,14 @@ import com.gdsc.boilerplate.springboot.security.dto.RegistrationRequest;
 import com.gdsc.boilerplate.springboot.security.dto.RegistrationResponse;
 import com.gdsc.boilerplate.springboot.security.mapper.UserMapper;
 import com.gdsc.boilerplate.springboot.service.UserValidationService;
-import com.gdsc.boilerplate.springboot.utils.ExceptionMessageAccessor;
 import com.gdsc.boilerplate.springboot.utils.GeneralMessageAccessor;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -70,4 +71,26 @@ public class UserServiceImpl implements UserService {
 
 		return UserMapper.INSTANCE.convertToAuthenticatedUserDto(user);
 	}
+
+	@Override
+	public Optional<User> findById(Long id) {
+
+		return userRepository.findById(id);
+	}
+
+	@Override
+	public void deleteUserById(Long id) {
+		final Optional<User> optionalUser  = findById(id);
+
+		if (optionalUser.isEmpty()) {
+			throw new UserIdNotExistsException();
+		}
+
+		try{
+			userRepository.deleteById(id);
+		}catch (Exception e){
+			throw new InternalServerException();
+		}
+	}
+
 }

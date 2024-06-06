@@ -9,7 +9,12 @@ public enum ExceptionConstants {
 
 	INVALID_INPUT_REGISTRATION(104, "invalid_input_registration"),
 
-	EMAIL_ALREADY_EXISTS(108, "email_already_exists");
+	EMAIL_ALREADY_EXISTS(108, "email_already_exists"),
+
+	USER_ID_NOT_EXISTS( 112, "not_found_user_id"),
+
+	UNAUTHORIZED(113,"unauthorized");
+
 
 	private final int code;
 	private final String messageName;
