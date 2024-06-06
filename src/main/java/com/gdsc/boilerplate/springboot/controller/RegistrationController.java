@@ -52,16 +52,4 @@ public class RegistrationController {
 		return ResponseEntity.status(HttpStatus.CONFLICT).body(response);
 	}
 
-	@ExceptionHandler(InvalidSyntaxException.class)
-	@ResponseStatus(HttpStatus.BAD_REQUEST)
-	ResponseEntity<ApiExceptionResponse> handleInvalidSyntaxRegistrationException(
-			InvalidSyntaxException exception) {
-
-		final ApiExceptionResponse response = new ApiExceptionResponse(
-				ExceptionConstants.INVALID_SYNTAX.getCode(),
-				accessor.getMessage(null, ExceptionConstants.INVALID_SYNTAX.getMessageName()));
-		log.warn("InvalidSyntaxRegistrationException: {}", response.getMessage());
-		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
-	}
-
 }
