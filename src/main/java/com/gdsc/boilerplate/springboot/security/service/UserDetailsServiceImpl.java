@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import com.gdsc.boilerplate.springboot.model.UserRole;
 import com.gdsc.boilerplate.springboot.security.dto.AuthenticatedUserDto;
+import com.gdsc.boilerplate.springboot.service.UserService;
 
 import java.util.Collections;
 import java.util.Objects;

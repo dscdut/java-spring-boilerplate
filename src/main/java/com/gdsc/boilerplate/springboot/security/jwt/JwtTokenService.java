@@ -10,8 +10,8 @@ import com.gdsc.boilerplate.springboot.model.User;
 import com.gdsc.boilerplate.springboot.security.dto.AuthenticatedUserDto;
 import com.gdsc.boilerplate.springboot.security.dto.LoginRequest;
 import com.gdsc.boilerplate.springboot.security.dto.LoginResponse;
-import com.gdsc.boilerplate.springboot.security.mapper.UserMapper;
-import com.gdsc.boilerplate.springboot.security.service.UserService;
+import com.gdsc.boilerplate.springboot.security.mapper.AuthenticationMapper;
+import com.gdsc.boilerplate.springboot.service.UserService;
 
 @Slf4j
 @Service
@@ -35,7 +35,7 @@ public class JwtTokenService {
 
 		final AuthenticatedUserDto authenticatedUserDto = userService.findAuthenticatedUserByUsername(username);
 
-		final User user = UserMapper.INSTANCE.convertToUser(authenticatedUserDto);
+		final User user = AuthenticationMapper.INSTANCE.convertToUser(authenticatedUserDto);
 		final String token = jwtTokenManager.generateToken(user);
 
 		log.info("{} has successfully logged in!", user.getEmail());
