@@ -8,7 +8,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.validation.BindingResult;
 
 import com.gdsc.boilerplate.springboot.security.dto.RegistrationRequest;
 import com.gdsc.boilerplate.springboot.security.dto.RegistrationResponse;
@@ -17,7 +16,6 @@ import com.gdsc.boilerplate.springboot.utils.ExceptionMessageAccessor;
 
 import javax.validation.Valid;
 
-@CrossOrigin
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/register")

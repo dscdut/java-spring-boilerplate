@@ -4,7 +4,6 @@ import com.gdsc.boilerplate.springboot.exceptions.ApiExceptionResponse;
 import com.gdsc.boilerplate.springboot.exceptions.ExceptionConstants;
 import com.gdsc.boilerplate.springboot.exceptions.InternalServerException;
 import com.gdsc.boilerplate.springboot.exceptions.InvalidAuthenticationException;
-import com.gdsc.boilerplate.springboot.exceptions.InvalidSyntaxException;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -13,7 +12,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import com.gdsc.boilerplate.springboot.security.dto.LoginRequest;
@@ -23,7 +21,6 @@ import com.gdsc.boilerplate.springboot.utils.ExceptionMessageAccessor;
 
 import javax.validation.Valid;
 
-@CrossOrigin
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/login")

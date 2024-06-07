@@ -22,7 +22,7 @@ import com.gdsc.boilerplate.springboot.exceptions.UserIdNotExistsException;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
-@CrossOrigin
+
 @RestController
 @RequiredArgsConstructor
 @Validated
