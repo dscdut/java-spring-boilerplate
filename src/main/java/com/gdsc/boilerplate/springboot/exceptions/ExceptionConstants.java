@@ -1,13 +1,12 @@
 package com.gdsc.boilerplate.springboot.exceptions;
 
 public enum ExceptionConstants {
-	INVALID_INPUT_LOGIN(101, "invalid_input_login"),
 
 	INVALID_AUTHENTICATED(102, "invalid_authentication"),
 
 	INTERNAL_SERVER_ERROR(103, "internal_server_error"),
 
-	INVALID_INPUT_REGISTRATION(104, "invalid_input_registration"),
+	INVALID_SYNTAX(104, "invalid_syntax"),
 
 	EMAIL_ALREADY_EXISTS(108, "email_already_exists"),
 

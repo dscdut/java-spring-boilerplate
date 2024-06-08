@@ -9,9 +9,9 @@ import com.gdsc.boilerplate.springboot.security.dto.AuthenticatedUserDto;
 import com.gdsc.boilerplate.springboot.security.dto.RegistrationRequest;
 
 @Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE)
-public interface UserMapper {
+public interface AuthenticationMapper {
 
-	UserMapper INSTANCE = Mappers.getMapper(UserMapper.class);
+	AuthenticationMapper INSTANCE = Mappers.getMapper(AuthenticationMapper.class);
 
 	User convertToUser(RegistrationRequest registrationRequest);
 
