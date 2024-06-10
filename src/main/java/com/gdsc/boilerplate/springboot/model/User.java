@@ -21,10 +21,11 @@ public class User {
 
 	@Column(unique = true)
 	private String email;
-	
+
 	private String password;
-	
-	@Enumerated(EnumType.STRING)
-	private UserRole userRole;
+
+	@ManyToOne
+	@JoinColumn(name = "role_id")
+	private Role role;
 
 }
