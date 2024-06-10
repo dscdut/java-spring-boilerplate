@@ -2,6 +2,7 @@ package com.gdsc.boilerplate.springboot.controller;
 
 import javax.validation.constraints.Positive;
 
+import com.gdsc.boilerplate.springboot.exceptions.InvalidSyntaxException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -43,12 +44,17 @@ public class UserController {
 		return ResponseEntity.status(HttpStatus.OK).body(userService.getPage(pageable));
 	}
 
-	@DeleteMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<String> deleteUser(@PathVariable @Positive Long id) {
+	@DeleteMapping(value="/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<?> deleteUser(@PathVariable String id) {
+		try {
+			final Long idLong = Long.parseLong(id);
+			userService.deleteUserById(idLong);
 
-		userService.deleteUserById(id);
+		} catch (NumberFormatException e) {
+			throw new InvalidSyntaxException();
+		}
 
-		return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Delete succesfully!");
+		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 	}
 
 	@ExceptionHandler(UserIdNotExistsException.class)

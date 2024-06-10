@@ -25,11 +25,11 @@ public class RegistrationController {
 	private final UserService userService;
 
 	private final ExceptionMessageAccessor accessor;
-	
+
 	@PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<RegistrationResponse> registrationRequest(@Valid @RequestBody RegistrationRequest registrationRequest) {
 		if (!registrationRequest.getPassword().equals(registrationRequest.getConfirm_password())) {
-			throw new InvalidSyntaxException();
+			throw new InvalidSyntaxException("password and confirm password are no match");
 		}
 
 		final RegistrationResponse registrationResponse = userService.registration(registrationRequest);
@@ -37,7 +37,7 @@ public class RegistrationController {
 		return ResponseEntity.status(HttpStatus.CREATED).body(registrationResponse);
 
 	}
-	
+
 
 	@ExceptionHandler(EmailAlreadyExistsException.class)
 	@ResponseStatus(HttpStatus.CONFLICT)

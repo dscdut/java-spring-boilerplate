@@ -25,16 +25,14 @@ public class GlobalControllerExceptionHandler {
 	@Autowired
 	private ExceptionMessageAccessor accessor;
 
-	@ExceptionHandler(value = { InternalServerException.class, Exception.class })
-	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-	public ResponseEntity<ApiExceptionResponse> handleConversion(Exception ex) {
-		final ApiExceptionResponse response = new ApiExceptionResponse(
-				ExceptionConstants.INTERNAL_SERVER_ERROR.getCode(),
+    @ExceptionHandler(InternalServerException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public ResponseEntity<?> handleConversion(RuntimeException ex) {
+    	final ApiExceptionResponse response = new ApiExceptionResponse(ExceptionConstants.INTERNAL_SERVER_ERROR.getCode(),
 				accessor.getMessage(null, ExceptionConstants.INTERNAL_SERVER_ERROR.getMessageName()));
-		ex.printStackTrace();
-		log.error("Error: {}", ex.getMessage());
-		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
-	}
+    	return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+    }
+
 
 	@ExceptionHandler(value = { MethodArgumentNotValidException.class })
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -71,7 +69,7 @@ public class GlobalControllerExceptionHandler {
 
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
 	}
-	
+
 	@ExceptionHandler(value = { InvalidSyntaxException.class })
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	public ResponseEntity<ValidationExceptionResponse> handleInvalidSyntaxExceptions(InvalidSyntaxException ex) {
