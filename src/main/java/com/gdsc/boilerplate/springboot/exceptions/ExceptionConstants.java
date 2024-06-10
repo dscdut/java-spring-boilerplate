@@ -12,7 +12,11 @@ public enum ExceptionConstants {
 
 	USER_ID_NOT_EXISTS( 112, "not_found_user_id"),
 
-	UNAUTHORIZED(113,"unauthorized");
+	UNAUTHORIZED(113,"unauthorized"),
+
+	ROLE_ID_NOT_EXISTS( 115, "not_found_role_id"),
+
+	ADMIN_UNAUTHORIZED(114,"admin_unauthorized");
 
 
 	private final int code;
