@@ -36,6 +36,9 @@ public class JwtTokenService {
 		final AuthenticatedUserDto authenticatedUserDto = userService.findAuthenticatedUserByUsername(username);
 
 		final User user = AuthenticationMapper.INSTANCE.convertToUser(authenticatedUserDto);
+
+		user.setRole(authenticatedUserDto.getRole());
+
 		final String token = jwtTokenManager.generateToken(user);
 
 		log.info("{} has successfully logged in!", user.getEmail());

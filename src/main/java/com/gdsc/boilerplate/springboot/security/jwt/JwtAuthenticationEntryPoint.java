@@ -18,9 +18,16 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
 	private ExceptionMessageAccessor accessor;
 	@Override
 	public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException {
-		final ApiExceptionResponse res = new ApiExceptionResponse(
-				ExceptionConstants.UNAUTHORIZED.getCode(),
-				accessor.getMessage(null, ExceptionConstants.UNAUTHORIZED.getMessageName()));
+
+		String messageName = accessor.getMessage(null, ExceptionConstants.UNAUTHORIZED.getMessageName());
+		int code = ExceptionConstants.UNAUTHORIZED.getCode();
+
+		if (request.getRequestURI().startsWith("/admin/")) {
+			messageName = accessor.getMessage(null, ExceptionConstants.ADMIN_UNAUTHORIZED.getMessageName());
+			code = ExceptionConstants.ADMIN_UNAUTHORIZED.getCode();
+		}
+
+		final ApiExceptionResponse res = new ApiExceptionResponse(code,messageName);
 
 		response.setStatus(HttpServletResponse.SC_FORBIDDEN);
 
