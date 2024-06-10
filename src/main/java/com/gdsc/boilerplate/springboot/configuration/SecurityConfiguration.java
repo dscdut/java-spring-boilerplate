@@ -6,6 +6,7 @@ import java.util.Arrays;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -41,13 +42,16 @@ public class SecurityConfiguration {
 
 		//@formatter:off
 
-		return http.cors().and().csrf(csrf -> csrf.disable())
-                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
-                .authorizeRequests(requests -> requests
-                        .antMatchers("/register", "/login", "/v3/api-docs/**", "/swagger-ui/**", "/api-docs", "/actuator/**").permitAll()
-                        .anyRequest().authenticated())
-                .exceptionHandling(handling -> handling.authenticationEntryPoint(unauthorizedHandler))
-                .sessionManagement(management -> management.sessionCreationPolicy(SessionCreationPolicy.STATELESS)).build();
+	    return http.cors().and().csrf(csrf -> csrf.disable()) // Enable CORS and disable CSRF
+	            .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class) // Add JWT authentication filter
+	            .authorizeRequests(requests -> requests
+	                    .antMatchers("/auth/**", "/v3/api-docs/**", "/swagger-ui/**", "/api-docs", "/actuator/**").permitAll() // Allow unauthenticated access to specific endpoints
+	                    .antMatchers(HttpMethod.GET, "/users").permitAll() // Allow unauthenticated GET requests to /users
+	                    .antMatchers(HttpMethod.DELETE, "/users").hasAuthority("ADMIN") // Require ADMIN authority for DELETE requests to /users
+	                    .anyRequest().authenticated()) // Require authentication for any other requests
+	            .exceptionHandling(handling -> handling.authenticationEntryPoint(unauthorizedHandler)) // Configure custom unauthorized handler
+	            .sessionManagement(management -> management.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // Configure stateless session management
+	            .build(); // Build the security filter chain
 
 		//@formatter:on
 	}
