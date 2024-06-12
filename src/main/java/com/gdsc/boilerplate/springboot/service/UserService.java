@@ -24,6 +24,6 @@ public interface UserService {
 
 	UpdateUserResponse updateInformationByUser(String username, UserUpdateInformationRequest userUpdateInformationRequest);
 
-	Optional<User> findById(Long id);
+	User findById(Long id);
 
 }

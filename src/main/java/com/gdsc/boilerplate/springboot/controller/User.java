@@ -34,7 +34,6 @@ import com.gdsc.boilerplate.springboot.exceptions.ExceptionConstants;
 import com.gdsc.boilerplate.springboot.exceptions.UserIdNotExistsException;
 import org.springframework.web.bind.annotation.*;
 
-@CrossOrigin
 @RestController
 @RequiredArgsConstructor
 @Validated

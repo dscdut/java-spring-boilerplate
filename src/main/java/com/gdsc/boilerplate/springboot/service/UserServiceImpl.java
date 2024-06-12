@@ -46,26 +46,27 @@ public class UserServiceImpl implements UserService {
 
 	private final RoleService roleService;
 
-	final private ExceptionMessageAccessor accessor;
-
 	@Override
 	public User findByUserName(String username) {
-
-		return userRepository.findByEmail(username);
+		User user = userRepository.findByEmail(username);
+		if(user == null){
+			throw new InvalidAuthenticationException();
+		}
+		return user;
 	}
 
 	@Override
 	public RegistrationResponse registration(RegistrationRequest registrationRequest) {
 
-		userValidationService.validateUser(registrationRequest);
+		userValidationService.checkEmail(registrationRequest.getEmail());
 
 		final User user = AuthenticationMapper.INSTANCE.convertToUser(registrationRequest);
 		user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
 
+		final Role role  =  roleService.findById(Long.parseLong("2"));
+		final Role roleMap = RoleMapper.INSTANCE.convertToRole(role.getId(), role.getName());
 
-		final Role role = RoleMapper.INSTANCE.convertToRole(Long.parseLong("2"), "USER");
-
-		user.setRole(role);
+		user.setRole(roleMap);
 
 		try{
 			final String username = registrationRequest.getFull_name();
@@ -87,11 +88,8 @@ public class UserServiceImpl implements UserService {
 	public AuthenticatedUserDto findAuthenticatedUserByUsername(String username) {
 
 		final User user = findByUserName(username);
-		final AuthenticatedUserDto authenticatedUserDto = AuthenticationMapper.INSTANCE.convertToAuthenticatedUserDto(user);
 
-		if (Objects.isNull(authenticatedUserDto)) {
-			throw new InvalidAuthenticationException();
-		}
+		final AuthenticatedUserDto authenticatedUserDto = AuthenticationMapper.INSTANCE.convertToAuthenticatedUserDto(user);
 
 		authenticatedUserDto.setRole(user.getRole());
 
@@ -126,49 +124,46 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public Optional<User> findById(Long id) {
-
-		return userRepository.findById(id);
-	}
-
-	@Override
-	public UpdateUserResponse updateUser(Long id, UpdateUserRequest updateUserRequest) {
-		final User user = UserMapper.INSTANCE.convertToUser(updateUserRequest);
-		user.setId(id);
-
-		final Optional<User> optionalUser  = findById(id);
-		final Optional<Role> optionalRole  =  roleService.findById(updateUserRequest.getRole_id());
+	public User findById(Long id) {
+		Optional<User> optionalUser  = userRepository.findById(id);
 
 		if (optionalUser.isEmpty()) {
 			throw new UserIdNotExistsException();
 		}
 
-		if (optionalRole.isEmpty()) {
-			throw new RoleIdNotExistsException();
-		}
+		return optionalUser.get();
+	}
 
-		final Role role = RoleMapper.INSTANCE.convertToRole(updateUserRequest.getRole_id(), optionalRole.get().getName());
-		user.setRole(role);
-		user.setPassword(optionalUser.get().getPassword());
-		user.setName(updateUserRequest.getFull_name());
-		userRepository.save(user);
+	@Override
+	public UpdateUserResponse updateUser(Long id, UpdateUserRequest updateUserRequest) {
+		userValidationService.checkEmail(updateUserRequest.getEmail());
+		final User userMap = UserMapper.INSTANCE.convertToUser(updateUserRequest);
+		userMap.setId(id);
 
-		return new UpdateUserResponse(user.getId(), user.getName(), user.getEmail(), role);
+		final User user  = findById(id);
+		final Role role  =  roleService.findById(updateUserRequest.getRole_id());
+
+		final Role roleMap = RoleMapper.INSTANCE.convertToRole(updateUserRequest.getRole_id(), role.getName());
+
+		userMap.setRole(roleMap);
+		userMap.setPassword(user.getPassword());
+		userMap.setName(updateUserRequest.getFull_name());
+		userRepository.save(userMap);
+
+		return new UpdateUserResponse(userMap.getId(), userMap.getName(), userMap.getEmail(), role);
 	}
 
 	@Override
 	public UpdateUserResponse updateInformationByUser(String username, UserUpdateInformationRequest userUpdateInformationRequest) {
+		userValidationService.checkEmail(userUpdateInformationRequest.getEmail());
 		final User userMap = UserMapper.INSTANCE.convertToUser(userUpdateInformationRequest);
 		final User user = findByUserName(username);
 
-		if (user == null) {
-			throw new UserIdNotExistsException();
-		}
 		userMap.setId(user.getId());
 		userMap.setPassword(user.getPassword());
 		userMap.setRole(user.getRole());
+		userMap.setName(userUpdateInformationRequest.getFull_name());
 		userRepository.save(userMap);
-
 
 		return new UpdateUserResponse(user.getId(),userUpdateInformationRequest.getFull_name(), userUpdateInformationRequest.getEmail(), user.getRole());
 	}

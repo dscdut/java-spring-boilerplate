@@ -15,15 +15,7 @@ public class UserValidationService {
 
 	private final UserRepository userRepository;
 
-	public void validateUser(RegistrationRequest registrationRequest) {
-
-		final String email = registrationRequest.getEmail();
-
-		checkEmail(email);
-	}
-
-
-	private void checkEmail(String email) {
+	void checkEmail(String email) {
 
 		final boolean existsByEmail = userRepository.existsByEmail(email);
 

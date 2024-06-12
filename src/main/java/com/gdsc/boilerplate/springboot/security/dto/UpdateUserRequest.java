@@ -16,8 +16,6 @@ import io.swagger.annotations.ApiModelProperty;
 @ToString
 @NoArgsConstructor
 public class UpdateUserRequest {
-
-
     @Pattern(regexp = "^[a-zA-Z]+([ '-][a-zA-Z]+)*$", message = "{fullname_invalid}")
     @NotEmpty(message = "{fullname_not_empty}")
     @Schema( example = "string")

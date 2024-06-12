@@ -14,12 +14,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Pattern;
 
-@CrossOrigin
 @RestController
 @RequiredArgsConstructor
 @Validated
@@ -35,23 +36,20 @@ public class Admin {
 
     @PreAuthorize("hasAuthority('ADMIN')")
     @DeleteMapping(value="/users/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> deleteUser(@PathVariable String id) {
-        try {
-            final Long idLong = Long.parseLong(id);
-            userService.deleteUserById(idLong);
+    public ResponseEntity<?> deleteUser(@PathVariable @Pattern(regexp = "\\d+", message = "{user_id_invalid}") String id)  {
 
-        } catch (NumberFormatException e) {
-            throw new InvalidSyntaxException(validationMessageAccessor.getMessage(null, "not_found_user_id"));
-        }
+        final Long idLong = Long.parseLong(id);
+        userService.deleteUserById(idLong);
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
     @PreAuthorize("hasAuthority('ADMIN')")
     @PutMapping(value = "/users/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<UpdateUserResponse> updateUser(@PathVariable String id,@Valid @RequestBody UpdateUserRequest updateUserRequest) {
-        if (id == null || id.isEmpty() || !id.matches("\\d+")) {
-            throw new InvalidSyntaxException(validationMessageAccessor.getMessage(null, "not_found_user_id"));
+    public ResponseEntity<UpdateUserResponse> updateUser(@PathVariable @Pattern(regexp = "\\d+", message = "{user_id_invalid}") String id,
+                                                         @Valid @RequestBody UpdateUserRequest updateUserRequest,  BindingResult bindingResult) {
+        if (bindingResult.hasFieldErrors("id")) {
+            bindingResult.addError(new ObjectError("id", validationMessageAccessor.getMessage(null, "user_id_invalid")));
         }
 
         final Long idLong = Long.parseLong(id);

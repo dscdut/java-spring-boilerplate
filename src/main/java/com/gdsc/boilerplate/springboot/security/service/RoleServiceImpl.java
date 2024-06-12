@@ -1,5 +1,6 @@
 package com.gdsc.boilerplate.springboot.security.service;
 
+import com.gdsc.boilerplate.springboot.exceptions.RoleIdNotExistsException;
 import com.gdsc.boilerplate.springboot.model.Role;
 import com.gdsc.boilerplate.springboot.repository.RoleRepository;
 import lombok.RequiredArgsConstructor;
@@ -14,7 +15,13 @@ public class RoleServiceImpl implements RoleService{
 
     private final RoleRepository roleRepository;
     @Override
-    public Optional<Role> findById(Long id) {
-        return roleRepository.findById(id);
+    public Role findById(Long id) {
+        final Optional<Role> optionalRole = roleRepository.findById(id);
+
+        if (optionalRole.isEmpty()) {
+            throw new RoleIdNotExistsException();
+        }
+
+        return optionalRole.get();
     }
 }

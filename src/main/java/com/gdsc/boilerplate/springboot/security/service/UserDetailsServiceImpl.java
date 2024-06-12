@@ -1,6 +1,6 @@
 package com.gdsc.boilerplate.springboot.security.service;
 
-import com.gdsc.boilerplate.springboot.exceptions.InvalidAuthenticationException;
+import com.gdsc.boilerplate.springboot.model.Role;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -13,7 +13,6 @@ import com.gdsc.boilerplate.springboot.security.dto.AuthenticatedUserDto;
 import com.gdsc.boilerplate.springboot.service.UserService;
 
 import java.util.Collections;
-import java.util.Objects;
 
 @Slf4j
 @Service
@@ -21,6 +20,8 @@ import java.util.Objects;
 public class UserDetailsServiceImpl implements UserDetailsService {
 
 	private final UserService userService;
+
+	private final RoleService roleService;
 
 	@Override
 	public UserDetails loadUserByUsername(String email) {
@@ -30,13 +31,9 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 		final String authenticatedUsername = authenticatedUser.getEmail();
 		final String authenticatedPassword = authenticatedUser.getPassword();
 
-		String userRole = "USER";
+		final Role role = roleService.findById(authenticatedUser.getRole().getId());
 
-		if(authenticatedUser.getRole().getId() == 1){
-			userRole = "ADMIN";
-		}
-
-		final SimpleGrantedAuthority grantedAuthority = new SimpleGrantedAuthority(userRole);
+		final SimpleGrantedAuthority grantedAuthority = new SimpleGrantedAuthority(role.getName());
 		log.debug("{} is {}", authenticatedUsername ,grantedAuthority);
 		return new User(authenticatedUsername, authenticatedPassword, Collections.singletonList(grantedAuthority));
 	}
