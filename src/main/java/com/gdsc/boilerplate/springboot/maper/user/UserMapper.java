@@ -1,7 +1,7 @@
 package com.gdsc.boilerplate.springboot.maper.user;
 
-import com.gdsc.boilerplate.springboot.security.dto.UpdateUserRequest;
-import com.gdsc.boilerplate.springboot.security.dto.UserUpdateInformationRequest;
+import com.gdsc.boilerplate.springboot.dto.UpdateUserRequest;
+import com.gdsc.boilerplate.springboot.dto.UserUpdateInformationRequest;
 import org.mapstruct.Mapper;
 import org.mapstruct.ReportingPolicy;
 import org.mapstruct.factory.Mappers;

@@ -1,4 +1,4 @@
-package com.gdsc.boilerplate.springboot.security.dto;
+package com.gdsc.boilerplate.springboot.dto;
 
 import com.gdsc.boilerplate.springboot.model.Role;
 import lombok.AllArgsConstructor;

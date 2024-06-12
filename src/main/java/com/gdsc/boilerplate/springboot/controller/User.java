@@ -1,15 +1,12 @@
 package com.gdsc.boilerplate.springboot.controller;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
 
 import com.gdsc.boilerplate.springboot.exceptions.InvalidSyntaxException;
-import com.gdsc.boilerplate.springboot.security.dto.UpdateUserRequest;
-import com.gdsc.boilerplate.springboot.security.dto.UpdateUserResponse;
-import com.gdsc.boilerplate.springboot.security.dto.UserUpdateInformationRequest;
+import com.gdsc.boilerplate.springboot.dto.UpdateUserResponse;
+import com.gdsc.boilerplate.springboot.dto.UserUpdateInformationRequest;
 import com.gdsc.boilerplate.springboot.utils.ValidationMessageAccessor;
-import io.swagger.v3.oas.annotations.Hidden;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +15,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.annotation.Validated;

@@ -1,4 +1,4 @@
-package com.gdsc.boilerplate.springboot.security.dto;
+package com.gdsc.boilerplate.springboot.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;

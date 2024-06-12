@@ -1,8 +1,8 @@
 package com.gdsc.boilerplate.springboot.controller;
 
 import com.gdsc.boilerplate.springboot.exceptions.*;
-import com.gdsc.boilerplate.springboot.security.dto.UpdateUserRequest;
-import com.gdsc.boilerplate.springboot.security.dto.UpdateUserResponse;
+import com.gdsc.boilerplate.springboot.dto.UpdateUserRequest;
+import com.gdsc.boilerplate.springboot.dto.UpdateUserResponse;
 import com.gdsc.boilerplate.springboot.service.UserService;
 import com.gdsc.boilerplate.springboot.utils.ExceptionMessageAccessor;
 import com.gdsc.boilerplate.springboot.utils.ValidationMessageAccessor;

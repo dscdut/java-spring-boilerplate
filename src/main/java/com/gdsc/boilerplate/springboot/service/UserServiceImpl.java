@@ -1,13 +1,13 @@
 package com.gdsc.boilerplate.springboot.service;
 
-import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import com.gdsc.boilerplate.springboot.dto.UpdateUserRequest;
+import com.gdsc.boilerplate.springboot.dto.UpdateUserResponse;
+import com.gdsc.boilerplate.springboot.dto.UserUpdateInformationRequest;
 import com.gdsc.boilerplate.springboot.exceptions.InvalidAuthenticationException;
-import com.gdsc.boilerplate.springboot.exceptions.RoleIdNotExistsException;
 import com.gdsc.boilerplate.springboot.security.service.RoleService;
-import com.gdsc.boilerplate.springboot.utils.ExceptionMessageAccessor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -25,7 +25,6 @@ import com.gdsc.boilerplate.springboot.security.dto.RegistrationRequest;
 import com.gdsc.boilerplate.springboot.security.dto.RegistrationResponse;
 import com.gdsc.boilerplate.springboot.security.mapper.AuthenticationMapper;
 import com.gdsc.boilerplate.springboot.model.Role;
-import com.gdsc.boilerplate.springboot.security.dto.*;
 import com.gdsc.boilerplate.springboot.security.mapper.RoleMapper;
 
 import lombok.RequiredArgsConstructor;

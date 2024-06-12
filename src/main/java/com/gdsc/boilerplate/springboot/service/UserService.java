@@ -1,13 +1,14 @@
 package com.gdsc.boilerplate.springboot.service;
 
+import com.gdsc.boilerplate.springboot.dto.UpdateUserRequest;
+import com.gdsc.boilerplate.springboot.dto.UpdateUserResponse;
+import com.gdsc.boilerplate.springboot.dto.UserUpdateInformationRequest;
 import org.springframework.data.domain.Pageable;
 
 import com.gdsc.boilerplate.springboot.configuration.dto.PageDto;
 import com.gdsc.boilerplate.springboot.configuration.dto.user.UserDto;
 import com.gdsc.boilerplate.springboot.model.User;
 import com.gdsc.boilerplate.springboot.security.dto.*;
-
-import java.util.Optional;
 
 public interface UserService {
 	PageDto<UserDto> getPage(Pageable pageable);

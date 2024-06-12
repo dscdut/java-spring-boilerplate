@@ -1,6 +1,5 @@
 package com.gdsc.boilerplate.springboot.security.mapper;
 
-import com.gdsc.boilerplate.springboot.security.dto.UpdateUserRequest;
 import org.mapstruct.Mapper;
 import org.mapstruct.ReportingPolicy;
 import org.mapstruct.factory.Mappers;
