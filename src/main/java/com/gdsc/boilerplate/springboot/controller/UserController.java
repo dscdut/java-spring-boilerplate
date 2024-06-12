@@ -19,7 +19,6 @@ import lombok.extern.slf4j.Slf4j;
 
 import com.gdsc.boilerplate.springboot.exceptions.ApiExceptionResponse;
 import com.gdsc.boilerplate.springboot.exceptions.ExceptionConstants;
-import com.gdsc.boilerplate.springboot.exceptions.InternalServerException;
 import com.gdsc.boilerplate.springboot.exceptions.UserIdNotExistsException;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -41,9 +40,8 @@ public class UserController {
 			@Positive(message = "{greater_zero}") @RequestParam(name = "page_size", required = false, defaultValue = DefaultConstants.DEFAULT_PAGE_SIZE) Integer pageSize,
 
 			@Positive(message = "{greater_zero}") @RequestParam(name = "page", required = false, defaultValue = DefaultConstants.DEFAULT_PAGE) Integer page) {
-		throw new InternalServerException();
-//		Pageable pageable = PageRequest.of(page - 1, pageSize);
-//		return ResponseEntity.status(HttpStatus.OK).body(userService.getPage(pageable));
+		Pageable pageable = PageRequest.of(page - 1, pageSize);
+		return ResponseEntity.status(HttpStatus.OK).body(userService.getPage(pageable));
 	}
 
 	@DeleteMapping(value="/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
