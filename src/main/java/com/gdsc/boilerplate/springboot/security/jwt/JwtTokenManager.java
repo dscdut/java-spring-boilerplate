@@ -20,8 +20,7 @@ public class JwtTokenManager {
 	public String generateToken(User user) {
 
 		final String username = user.getEmail();
-		final String userRole = String.valueOf(user.getRole().getName());
-
+		final String userRole = user.getRole().getName();
 
 		//@formatter:off
 		return JWT.create()

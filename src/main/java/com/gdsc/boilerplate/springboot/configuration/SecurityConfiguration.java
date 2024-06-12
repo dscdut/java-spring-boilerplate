@@ -6,6 +6,7 @@ import java.util.Arrays;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -45,6 +46,7 @@ public class SecurityConfiguration {
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeRequests(requests -> requests
                         .antMatchers("/auth/**","/users", "/v3/api-docs/**", "/swagger-ui/**", "/api-docs", "/actuator/**").permitAll()
+						.antMatchers(HttpMethod.GET, "/users").permitAll() // Allow unauthenticated GET requests to /users
 						.anyRequest().authenticated())
                 .exceptionHandling(handling -> handling.authenticationEntryPoint(unauthorizedHandler))
                 .sessionManagement(management -> management.sessionCreationPolicy(SessionCreationPolicy.STATELESS)).build();

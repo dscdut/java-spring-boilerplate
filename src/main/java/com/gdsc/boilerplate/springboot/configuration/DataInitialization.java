@@ -21,7 +21,7 @@ public class DataInitialization {
     @PostConstruct
     public void initData() {
         createRoleIfNotExists("ADMIN");
-        createRoleIfNotExists("USER");
+        createRoleIfNotExists("MEMBER");
     }
 
     private void createRoleIfNotExists(String userRole) {

@@ -15,13 +15,9 @@ import javax.validation.constraints.Pattern;
 public class LoginRequest {
 
 	@NotEmpty(message = "{email_not_empty}")
-	//@Pattern(regexp = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$", message = "{email_invalid}")
-	@Schema( example = "string")
 	private String email;
 
-	//@Pattern(regexp = "^(?=.*[0-9])(?=.*[A-Z]).{7,50}$", message = "{password_invalid}")
 	@NotEmpty(message = "{password_not_empty}")
-	@Schema( example = "string")
 	private String password;
 
 }

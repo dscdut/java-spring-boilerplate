@@ -49,19 +49,6 @@ public class Authentication {
 
     }
 
-
-    @ExceptionHandler(EmailAlreadyExistsException.class)
-    @ResponseStatus(HttpStatus.CONFLICT)
-    ResponseEntity<ApiExceptionResponse> handleEmailAlreadyExistsException(EmailAlreadyExistsException exception) {
-
-        final ApiExceptionResponse response = new ApiExceptionResponse(
-                ExceptionConstants.EMAIL_ALREADY_EXISTS.getCode(),
-                accessor.getMessage(null, ExceptionConstants.EMAIL_ALREADY_EXISTS.getMessageName()));
-        log.warn("EmailAlreadyExistsException: {}", response.getMessage());
-        return ResponseEntity.status(HttpStatus.CONFLICT).body(response);
-    }
-
-
     @ExceptionHandler(InvalidAuthenticationException.class)
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     ResponseEntity<ApiExceptionResponse> handleInvalidAuthenticationException(InvalidAuthenticationException exception) {
