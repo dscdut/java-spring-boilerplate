@@ -26,7 +26,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 	@Override
 	public UserDetails loadUserByUsername(String email) {
 
-		final AuthenticatedUserDto authenticatedUser = userService.findAuthenticatedUserByUsername(email);
+		final AuthenticatedUserDto authenticatedUser = userService.findAuthenticatedUserByEmail(email);
 
 		final String authenticatedUsername = authenticatedUser.getEmail();
 		final String authenticatedPassword = authenticatedUser.getPassword();

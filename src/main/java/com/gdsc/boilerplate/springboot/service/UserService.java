@@ -13,11 +13,11 @@ import com.gdsc.boilerplate.springboot.security.dto.*;
 public interface UserService {
 	PageDto<UserDto> getPage(Pageable pageable);
 
-	User findByUserName(String username);
+	User findByEmail(String email);
 
 	RegistrationResponse registration(RegistrationRequest registrationRequest);
 
-	AuthenticatedUserDto findAuthenticatedUserByUsername(String username);
+	AuthenticatedUserDto findAuthenticatedUserByEmail(String email);
 
 	void deleteUserById(Long id);
 

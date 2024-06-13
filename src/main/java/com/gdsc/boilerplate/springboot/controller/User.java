@@ -62,9 +62,11 @@ public class User {
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
 		}
 
-		String username = userDetails.getUsername();
+		//username is the email the user logs in to
+		String email = userDetails.getUsername();
+
 		try {
-			final UpdateUserResponse userUpdate = userService.updateInformationByUser(username, userUpdateInformationRequest);
+			final UpdateUserResponse userUpdate = userService.updateInformationByUser(email, userUpdateInformationRequest);
 
 			return ResponseEntity.ok(userUpdate);
 		} catch (NumberFormatException e) {

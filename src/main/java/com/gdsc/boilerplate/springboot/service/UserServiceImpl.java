@@ -46,8 +46,8 @@ public class UserServiceImpl implements UserService {
 	private final RoleService roleService;
 
 	@Override
-	public User findByUserName(String username) {
-		User user = userRepository.findByEmail(username);
+	public User findByEmail(String email) {
+		User user = userRepository.findByEmail(email);
 		if(user == null){
 			throw new InvalidAuthenticationException();
 		}
@@ -84,9 +84,9 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public AuthenticatedUserDto findAuthenticatedUserByUsername(String username) {
+	public AuthenticatedUserDto findAuthenticatedUserByEmail(String email) {
 
-		final User user = findByUserName(username);
+		final User user = findByEmail(email);
 
 		final AuthenticatedUserDto authenticatedUserDto = AuthenticationMapper.INSTANCE.convertToAuthenticatedUserDto(user);
 
@@ -153,10 +153,10 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public UpdateUserResponse updateInformationByUser(String username, UserUpdateInformationRequest userUpdateInformationRequest) {
+	public UpdateUserResponse updateInformationByUser(String email, UserUpdateInformationRequest userUpdateInformationRequest) {
 		userValidationService.checkEmail(userUpdateInformationRequest.getEmail());
 		final User userMap = UserMapper.INSTANCE.convertToUser(userUpdateInformationRequest);
-		final User user = findByUserName(username);
+		final User user = findByEmail(email);
 
 		userMap.setId(user.getId());
 		userMap.setPassword(user.getPassword());
