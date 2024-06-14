@@ -20,24 +20,26 @@ The project follows a standard Maven project layout:
 ```sh
 spring-boot-boilerplate
 ├── src
-│ ├── main
-│ │ ├── java
-│ │ │ └── com/gdsc/boilerplate/springboot
-│ │ │ ├── configuration
-│ │ │ ├── controller
-│ │ │ ├── dto
-│ │ │ ├── exception
-│ │ │ ├── model
-│ │ │ ├── repository
-│ │ │ ├── security
-│ │ │ ├── service
-│ │ │ └── SpringBootBoilerplateApplication.java
-│ │ └── resources
-│ │ ├── application.yml
-│ │ └── static
-│ └── test
-│ └── java
-│ └── com/gdsc/boilerplate/springboot
+│   ├── main
+│   │   ├── java
+│   │   │   └── com/gdsc/boilerplate/springboot
+│   │   │       ├── configuration
+│   │   │       ├── controller
+│   │   │       ├── dto
+│   │   │       ├── exception
+│   │   │       ├── mapper
+│   │   │       ├── model
+│   │   │       ├── repository
+│   │   │       ├── security
+│   │   │       ├── service
+│   │   │       ├── utils
+│   │   │       └── SpringBootBoilerplateApplication.java
+│   │   └── resources
+│   │       ├── application.yml
+│   │       └── static
+│   └── test
+│       └── java
+│           └── com/gdsc/boilerplate/springboot
 └── pom.xml
 ```
 
