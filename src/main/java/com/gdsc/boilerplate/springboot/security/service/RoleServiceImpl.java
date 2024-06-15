@@ -14,6 +14,18 @@ import java.util.Optional;
 public class RoleServiceImpl implements RoleService{
 
     private final RoleRepository roleRepository;
+
+    @Override
+    public Role findById(Long id) {
+        final Optional<Role> role = roleRepository.findById(id);
+
+        if (role.isEmpty()) {
+            throw new RoleIdNotExistsException();
+        }
+
+        return role.get();
+    }
+
     @Override
     public Role findByName(String name) {
         final Role role = roleRepository.findByName(name);

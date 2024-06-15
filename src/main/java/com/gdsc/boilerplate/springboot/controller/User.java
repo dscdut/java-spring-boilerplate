@@ -52,7 +52,7 @@ public class User {
 		return ResponseEntity.status(HttpStatus.OK).body(userService.getPage(pageable));
 	}
 
-	@PreAuthorize("hasAuthority('MEMBER')")
+
 	@PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> updateUser(@Valid @RequestBody UserUpdateInformationRequest userUpdateInformationRequest) {
 		UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();

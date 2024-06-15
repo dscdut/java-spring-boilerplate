@@ -34,9 +34,8 @@ public class Admin {
 
     final private ValidationMessageAccessor validationMessageAccessor;
 
-    @PreAuthorize("hasAuthority('ADMIN')")
     @DeleteMapping(value="/users/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> deleteUser(@PathVariable @Pattern(regexp = "\\d+", message = "{user_id_invalid}") String id)  {
+    public ResponseEntity<?> deleteUser(@PathVariable @Pattern(regexp = "0|[1-9]\\d*", message = "{user_id_invalid}") String id)  {
 
         final Long idLong = Long.parseLong(id);
         userService.deleteUserById(idLong);
@@ -44,9 +43,9 @@ public class Admin {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
-    @PreAuthorize("hasAuthority('ADMIN')")
+
     @PutMapping(value = "/users/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<UpdateUserResponse> updateUser(@PathVariable @Pattern(regexp = "\\d+", message = "{user_id_invalid}") String id,
+    public ResponseEntity<UpdateUserResponse> updateUser(@PathVariable @Pattern(regexp = "0|[1-9]\\d*", message = "{user_id_invalid}") String id,
                                                          @Valid @RequestBody UpdateUserRequest updateUserRequest,  BindingResult bindingResult) {
         if (bindingResult.hasFieldErrors("id")) {
             bindingResult.addError(new ObjectError("id", validationMessageAccessor.getMessage(null, "user_id_invalid")));

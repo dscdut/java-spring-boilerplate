@@ -47,6 +47,8 @@ public class SecurityConfiguration {
                 .authorizeRequests(requests -> requests
                         .antMatchers("/auth/**", "/v3/api-docs/**", "/swagger-ui/**", "/api-docs", "/actuator/**").permitAll()
 						.antMatchers(HttpMethod.GET, "/users").permitAll() // Allow unauthenticated GET requests to /users
+						.antMatchers("/admin/**").hasAuthority("ADMIN")
+						.antMatchers(HttpMethod.PUT, "/users").hasAuthority("MEMBER")
 						.anyRequest().authenticated())
                 .exceptionHandling(handling -> handling.authenticationEntryPoint(unauthorizedHandler))
                 .sessionManagement(management -> management.sessionCreationPolicy(SessionCreationPolicy.STATELESS)).build();
