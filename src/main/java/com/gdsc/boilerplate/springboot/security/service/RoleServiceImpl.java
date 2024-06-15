@@ -29,11 +29,6 @@ public class RoleServiceImpl implements RoleService{
     @Override
     public Role findByName(String name) {
         final Role role = roleRepository.findByName(name);
-
-        if (role == null) {
-            throw new RoleIdNotExistsException();
-        }
-
         return role;
     }
 }
