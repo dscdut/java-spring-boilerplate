@@ -15,13 +15,13 @@ public class RoleServiceImpl implements RoleService{
 
     private final RoleRepository roleRepository;
     @Override
-    public Role findById(Long id) {
-        final Optional<Role> optionalRole = roleRepository.findById(id);
+    public Role findByName(String name) {
+        final Role role = roleRepository.findByName(name);
 
-        if (optionalRole.isEmpty()) {
+        if (role == null) {
             throw new RoleIdNotExistsException();
         }
 
-        return optionalRole.get();
+        return role;
     }
 }

@@ -45,7 +45,7 @@ public class SecurityConfiguration {
 		return http.cors().and().csrf(csrf -> csrf.disable())
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeRequests(requests -> requests
-                        .antMatchers("/auth/**","/users", "/v3/api-docs/**", "/swagger-ui/**", "/api-docs", "/actuator/**").permitAll()
+                        .antMatchers("/auth/**", "/v3/api-docs/**", "/swagger-ui/**", "/api-docs", "/actuator/**").permitAll()
 						.antMatchers(HttpMethod.GET, "/users").permitAll() // Allow unauthenticated GET requests to /users
 						.anyRequest().authenticated())
                 .exceptionHandling(handling -> handling.authenticationEntryPoint(unauthorizedHandler))
