@@ -48,9 +48,7 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public User findByEmail(String email) {
 		User user = userRepository.findByEmail(email);
-		if(user == null){
-			throw new InvalidAuthenticationException();
-		}
+
 		return user;
 	}
 
@@ -87,6 +85,10 @@ public class UserServiceImpl implements UserService {
 	public AuthenticatedUserDto findAuthenticatedUserByEmail(String email) {
 
 		final User user = findByEmail(email);
+
+		if(user == null){
+			throw new InvalidAuthenticationException();
+		}
 
 		final AuthenticatedUserDto authenticatedUserDto = AuthenticationMapper.INSTANCE.convertToAuthenticatedUserDto(user);
 
