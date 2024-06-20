@@ -9,6 +9,7 @@ import io.swagger.v3.oas.models.security.SecurityRequirement;
 import io.swagger.v3.oas.models.security.SecurityScheme;
 import lombok.Getter;
 import lombok.Setter;
+import org.springdoc.core.customizers.OpenApiCustomiser;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -52,6 +53,20 @@ public class SwaggerConfiguration {
 		openAPI.addSecurityItem(new SecurityRequirement().addList(schemeName));
 
 		return openAPI;
+	}
+
+	@Bean
+	public OpenApiCustomiser customizeOpenAPI() {
+		return openApi -> {
+			openApi.getComponents().getSchemas().values().forEach(schema -> {
+				if (schema instanceof io.swagger.v3.oas.models.media.Schema) {
+					io.swagger.v3.oas.models.media.Schema<?> s = (io.swagger.v3.oas.models.media.Schema<?>) schema;
+					if (s.getPattern() != null) {
+						s.setPattern(null); // Remove pattern from schema
+					}
+				}
+			});
+		};
 	}
 
 	private Info getApiInformation() {

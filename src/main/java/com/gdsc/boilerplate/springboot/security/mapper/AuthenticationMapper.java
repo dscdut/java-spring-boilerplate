@@ -19,4 +19,5 @@ public interface AuthenticationMapper {
 
 	User convertToUser(AuthenticatedUserDto authenticatedUserDto);
 
+
 }

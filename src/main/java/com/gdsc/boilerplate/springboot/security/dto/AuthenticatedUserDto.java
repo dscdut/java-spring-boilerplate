@@ -1,6 +1,6 @@
 package com.gdsc.boilerplate.springboot.security.dto;
 
-import com.gdsc.boilerplate.springboot.model.UserRole;
+import com.gdsc.boilerplate.springboot.model.Role;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,6 +17,7 @@ public class AuthenticatedUserDto {
 
 	private String password;
 
-	private UserRole userRole;
+	private Role role;
+
 
 }

@@ -3,6 +3,11 @@ package com.gdsc.boilerplate.springboot.service;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import com.gdsc.boilerplate.springboot.dto.UpdateUserRequest;
+import com.gdsc.boilerplate.springboot.dto.UpdateUserResponse;
+import com.gdsc.boilerplate.springboot.dto.UserUpdateInformationRequest;
+import com.gdsc.boilerplate.springboot.exceptions.InvalidAuthenticationException;
+import com.gdsc.boilerplate.springboot.security.service.RoleService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -14,13 +19,13 @@ import com.gdsc.boilerplate.springboot.exceptions.InternalServerException;
 import com.gdsc.boilerplate.springboot.exceptions.UserIdNotExistsException;
 import com.gdsc.boilerplate.springboot.maper.user.UserMapper;
 import com.gdsc.boilerplate.springboot.model.User;
-import com.gdsc.boilerplate.springboot.model.UserRole;
 import com.gdsc.boilerplate.springboot.repository.UserRepository;
 import com.gdsc.boilerplate.springboot.security.dto.AuthenticatedUserDto;
 import com.gdsc.boilerplate.springboot.security.dto.RegistrationRequest;
 import com.gdsc.boilerplate.springboot.security.dto.RegistrationResponse;
 import com.gdsc.boilerplate.springboot.security.mapper.AuthenticationMapper;
-import com.gdsc.boilerplate.springboot.utils.GeneralMessageAccessor;
+import com.gdsc.boilerplate.springboot.model.Role;
+import com.gdsc.boilerplate.springboot.security.mapper.RoleMapper;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -38,29 +43,35 @@ public class UserServiceImpl implements UserService {
 
 	private final UserValidationService userValidationService;
 
-	private final GeneralMessageAccessor generalMessageAccessor;
+	private final RoleService roleService;
 
 	@Override
-	public User findByUsername(String username) {
+	public User findByEmail(String email) {
+		User user = userRepository.findByEmail(email);
 
-		return userRepository.findByEmail(username);
+		return user;
 	}
 
 	@Override
 	public RegistrationResponse registration(RegistrationRequest registrationRequest) {
 
-		userValidationService.validateUser(registrationRequest);
+		userValidationService.checkEmail(registrationRequest.getEmail());
 
 		final User user = AuthenticationMapper.INSTANCE.convertToUser(registrationRequest);
 		user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
-		user.setUserRole(UserRole.USER);
 
-		try {
-			User savedUser = userRepository.save(user);
-			Long userId = savedUser.getId();
+		final Role role  =  roleService.findByName("MEMBER");
+		final Role roleMap = RoleMapper.INSTANCE.convertToRole(role.getId(), role.getName());
 
+		user.setRole(roleMap);
+
+		try{
 			final String username = registrationRequest.getFull_name();
 			final String email = registrationRequest.getEmail();
+
+			user.setName(username);
+			User savedUser = userRepository.save(user);
+			Long userId = savedUser.getId();
 
 			log.info("{} registered successfully!", username);
 
@@ -71,12 +82,22 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public AuthenticatedUserDto findAuthenticatedUserByUsername(String username) {
+	public AuthenticatedUserDto findAuthenticatedUserByEmail(String email) {
 
-		final User user = findByUsername(username);
+		final User user = findByEmail(email);
 
-		return AuthenticationMapper.INSTANCE.convertToAuthenticatedUserDto(user);
+		if(user == null){
+			throw new InvalidAuthenticationException();
+		}
+
+		final AuthenticatedUserDto authenticatedUserDto = AuthenticationMapper.INSTANCE.convertToAuthenticatedUserDto(user);
+
+		authenticatedUserDto.setRole(user.getRole());
+
+		return authenticatedUserDto;
+
 	}
+
 
 	@Override
 	public PageDto<UserDto> getPage(Pageable pageable) {
@@ -102,4 +123,50 @@ public class UserServiceImpl implements UserService {
 			throw new InternalServerException();
 		}
 	}
+
+	@Override
+	public User findById(Long id) {
+		Optional<User> optionalUser  = userRepository.findById(id);
+
+		if (optionalUser.isEmpty()) {
+			throw new UserIdNotExistsException();
+		}
+
+		return optionalUser.get();
+	}
+
+	@Override
+	public UpdateUserResponse updateUser(Long id, UpdateUserRequest updateUserRequest) {
+		userValidationService.checkEmail(updateUserRequest.getEmail());
+		final User userMap = UserMapper.INSTANCE.convertToUser(updateUserRequest);
+		userMap.setId(id);
+
+		final User user  = findById(id);
+		final Role role  =  roleService.findById(updateUserRequest.getRole_id());
+
+		final Role roleMap = RoleMapper.INSTANCE.convertToRole(updateUserRequest.getRole_id(), role.getName());
+
+		userMap.setRole(roleMap);
+		userMap.setPassword(user.getPassword());
+		userMap.setName(updateUserRequest.getFull_name());
+		userRepository.save(userMap);
+
+		return new UpdateUserResponse(userMap.getId(), userMap.getName(), userMap.getEmail(), role);
+	}
+
+	@Override
+	public UpdateUserResponse updateInformationByUser(String email, UserUpdateInformationRequest userUpdateInformationRequest) {
+		userValidationService.checkEmail(userUpdateInformationRequest.getEmail());
+		final User userMap = UserMapper.INSTANCE.convertToUser(userUpdateInformationRequest);
+		final User user = findByEmail(email);
+
+		userMap.setId(user.getId());
+		userMap.setPassword(user.getPassword());
+		userMap.setRole(user.getRole());
+		userMap.setName(userUpdateInformationRequest.getFull_name());
+		userRepository.save(userMap);
+
+		return new UpdateUserResponse(user.getId(),userUpdateInformationRequest.getFull_name(), userUpdateInformationRequest.getEmail(), user.getRole());
+	}
+
 }

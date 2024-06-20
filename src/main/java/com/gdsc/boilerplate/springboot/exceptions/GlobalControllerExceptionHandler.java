@@ -42,7 +42,7 @@ public class GlobalControllerExceptionHandler {
 	public ResponseEntity<ValidationExceptionResponse> handleValidationExceptions(MethodArgumentNotValidException ex) {
 		List<String> errors = new ArrayList<String>();
 		for (FieldError error : ex.getBindingResult().getFieldErrors()) {
-			errors.add(error.getField() + ": " + error.getDefaultMessage());
+			errors.add(error.getDefaultMessage());
 		}
 
 		final ValidationExceptionResponse response = new ValidationExceptionResponse();
@@ -60,7 +60,7 @@ public class GlobalControllerExceptionHandler {
 			ConstraintViolationException ex) {
 		List<String> errors = new ArrayList<>();
 		for (ConstraintViolation<?> violation : ex.getConstraintViolations()) {
-			errors.add(violation.getPropertyPath() + ": " + violation.getMessage());
+			errors.add(violation.getMessage());
 		}
 
 		final ValidationExceptionResponse response = new ValidationExceptionResponse();
@@ -84,6 +84,17 @@ public class GlobalControllerExceptionHandler {
 		log.warn("InvalidSyntaxException: {}", response.getMessage());
 
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+	}
+
+	@ExceptionHandler(EmailAlreadyExistsException.class)
+	@ResponseStatus(HttpStatus.CONFLICT)
+	ResponseEntity<ApiExceptionResponse> handleEmailAlreadyExistsException(EmailAlreadyExistsException exception) {
+
+		final ApiExceptionResponse response = new ApiExceptionResponse(
+				ExceptionConstants.EMAIL_ALREADY_EXISTS.getCode(),
+				accessor.getMessage(null, ExceptionConstants.EMAIL_ALREADY_EXISTS.getMessageName()));
+		log.warn("EmailAlreadyExistsException: {}", response.getMessage());
+		return ResponseEntity.status(HttpStatus.CONFLICT).body(response);
 	}
 
 }
