@@ -60,12 +60,12 @@ public class UserServiceImpl implements UserService {
 		final User user = AuthenticationMapper.INSTANCE.convertToUser(registrationRequest);
 		user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
 
-		final Role role  =  roleService.findByName("MEMBER");
+		final Role role = roleService.findByName("MEMBER");
 		final Role roleMap = RoleMapper.INSTANCE.convertToRole(role.getId(), role.getName());
 
 		user.setRole(roleMap);
 
-		try{
+		try {
 			final String fullname = registrationRequest.getFull_name();
 			final String email = registrationRequest.getEmail();
 
@@ -86,11 +86,12 @@ public class UserServiceImpl implements UserService {
 
 		final User user = userRepository.findById(id).orElse(null);
 
-		if(user == null){
+		if (user == null) {
 			throw new InvalidAuthenticationException();
 		}
 
-		final AuthenticatedUserDto authenticatedUserDto = AuthenticationMapper.INSTANCE.convertToAuthenticatedUserDto(user);
+		final AuthenticatedUserDto authenticatedUserDto = AuthenticationMapper.INSTANCE
+				.convertToAuthenticatedUserDto(user);
 
 		authenticatedUserDto.setRole(user.getRole());
 
@@ -102,11 +103,12 @@ public class UserServiceImpl implements UserService {
 	public AuthenticatedUserDto findAuthenticatedUserByEmail(String email) {
 		final User user = findByEmail(email);
 
-		if(user == null){
+		if (user == null) {
 			throw new InvalidAuthenticationException();
 		}
 
-		final AuthenticatedUserDto authenticatedUserDto = AuthenticationMapper.INSTANCE.convertToAuthenticatedUserDto(user);
+		final AuthenticatedUserDto authenticatedUserDto = AuthenticationMapper.INSTANCE
+				.convertToAuthenticatedUserDto(user);
 
 		authenticatedUserDto.setRole(user.getRole());
 
@@ -118,7 +120,11 @@ public class UserServiceImpl implements UserService {
 		Page<User> page = userRepository.findAll(pageable);
 		PageDto<UserDto> pageDto = new PageDto<UserDto>();
 		pageDto.setTotal(page.getTotalElements());
-		pageDto.setData(page.getContent().stream().map(user -> UserMapper.INSTANCE.convertToUserDto(user))
+		pageDto.setData(page.getContent().stream().map(user -> {
+			UserDto userDto = UserMapper.INSTANCE.convertToUserDto(user);
+			userDto.setFull_name(user.getFullname());
+			return userDto;
+			})
 				.collect(Collectors.toList()));
 		return pageDto;
 	}
@@ -140,7 +146,7 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public User findById(Long id) {
-		Optional<User> optionalUser  = userRepository.findById(id);
+		Optional<User> optionalUser = userRepository.findById(id);
 
 		if (optionalUser.isEmpty()) {
 			throw new UserIdNotExistsException();
@@ -155,8 +161,8 @@ public class UserServiceImpl implements UserService {
 		final User userMap = UserMapper.INSTANCE.convertToUser(updateUserRequest);
 		userMap.setId(id);
 
-		final User user  = findById(id);
-		final Role role  =  roleService.findById(updateUserRequest.getRole_id());
+		final User user = findById(id);
+		final Role role = roleService.findById(updateUserRequest.getRole_id());
 
 		final Role roleMap = RoleMapper.INSTANCE.convertToRole(updateUserRequest.getRole_id(), role.getName());
 
@@ -169,7 +175,8 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public UpdateUserResponse updateInformationByUser(String email, UserUpdateInformationRequest userUpdateInformationRequest) {
+	public UpdateUserResponse updateInformationByUser(String email,
+			UserUpdateInformationRequest userUpdateInformationRequest) {
 		userValidationService.checkEmail(userUpdateInformationRequest.getEmail());
 		final User userMap = UserMapper.INSTANCE.convertToUser(userUpdateInformationRequest);
 		final User user = findByEmail(email);
@@ -180,8 +187,8 @@ public class UserServiceImpl implements UserService {
 		userMap.setFullname(userUpdateInformationRequest.getFull_name());
 		userRepository.save(userMap);
 
-		return new UpdateUserResponse(user.getId(),userUpdateInformationRequest.getFull_name(), userUpdateInformationRequest.getEmail(), user.getRole());
+		return new UpdateUserResponse(user.getId(), userUpdateInformationRequest.getFull_name(),
+				userUpdateInformationRequest.getEmail(), user.getRole());
 	}
-
 
 }
