@@ -59,37 +59,38 @@ public class UserServiceImpl implements UserService {
 		final User user = AuthenticationMapper.INSTANCE.convertToUser(registrationRequest);
 		user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
 
-		final Role role  =  roleService.findByName("MEMBER");
+		final Role role = roleService.findByName("MEMBER");
 		final Role roleMap = RoleMapper.INSTANCE.convertToRole(role.getId(), role.getName());
 
 		user.setRole(roleMap);
 
-		try{
-			final String username = registrationRequest.getFull_name();
+		try {
+			final String fullname = registrationRequest.getFull_name();
 			final String email = registrationRequest.getEmail();
 
-			user.setName(username);
+			user.setFullname(fullname);
 			User savedUser = userRepository.save(user);
 			Long userId = savedUser.getId();
 
-			log.info("{} registered successfully!", username);
+			log.info("{} registered successfully!", email);
 
-			return new RegistrationResponse(userId, email, username);
+			return new RegistrationResponse(userId, email, fullname);
 		} catch (Exception e) {
 			throw new InternalServerException();
 		}
 	}
 
 	@Override
-	public AuthenticatedUserDto findAuthenticatedUserByEmail(String email) {
+	public AuthenticatedUserDto findAuthenticatedUserById(Long id) {
 
-		final User user = findByEmail(email);
+		final User user = userRepository.findById(id).orElse(null);
 
-		if(user == null){
+		if (user == null) {
 			throw new InvalidAuthenticationException();
 		}
 
-		final AuthenticatedUserDto authenticatedUserDto = AuthenticationMapper.INSTANCE.convertToAuthenticatedUserDto(user);
+		final AuthenticatedUserDto authenticatedUserDto = AuthenticationMapper.INSTANCE
+				.convertToAuthenticatedUserDto(user);
 
 		authenticatedUserDto.setRole(user.getRole());
 
@@ -97,6 +98,21 @@ public class UserServiceImpl implements UserService {
 
 	}
 
+	@Override
+	public AuthenticatedUserDto findAuthenticatedUserByEmail(String email) {
+		final User user = findByEmail(email);
+
+		if (user == null) {
+			throw new InvalidAuthenticationException();
+		}
+
+		final AuthenticatedUserDto authenticatedUserDto = AuthenticationMapper.INSTANCE
+				.convertToAuthenticatedUserDto(user);
+
+		authenticatedUserDto.setRole(user.getRole());
+
+		return authenticatedUserDto;
+	}
 
 	@Override
 	public PageDto<UserInfoResponse> getPage(Pageable pageable) {
@@ -125,7 +141,7 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public User findById(Long id) {
-		Optional<User> optionalUser  = userRepository.findById(id);
+		Optional<User> optionalUser = userRepository.findById(id);
 
 		if (optionalUser.isEmpty()) {
 			throw new UserIdNotExistsException();
@@ -140,21 +156,22 @@ public class UserServiceImpl implements UserService {
 		final User userMap = UserMapper.INSTANCE.convertToUser(updateUserRequest);
 		userMap.setId(id);
 
-		final User user  = findById(id);
-		final Role role  =  roleService.findById(updateUserRequest.getRole_id());
+		final User user = findById(id);
+		final Role role = roleService.findById(updateUserRequest.getRole_id());
 
 		final Role roleMap = RoleMapper.INSTANCE.convertToRole(updateUserRequest.getRole_id(), role.getName());
 
 		userMap.setRole(roleMap);
 		userMap.setPassword(user.getPassword());
-		userMap.setName(updateUserRequest.getFull_name());
+		userMap.setFullname(updateUserRequest.getFull_name());
 		userRepository.save(userMap);
 
-		return new UpdateUserResponse(userMap.getId(), userMap.getName(), userMap.getEmail(), role);
+		return new UpdateUserResponse(userMap.getId(), userMap.getFullname(), userMap.getEmail(), role);
 	}
 
 	@Override
-	public UpdateUserResponse updateInformationByUser(String email, UserUpdateInformationRequest userUpdateInformationRequest) {
+	public UpdateUserResponse updateInformationByUser(String email,
+			UserUpdateInformationRequest userUpdateInformationRequest) {
 		userValidationService.checkEmail(userUpdateInformationRequest.getEmail());
 		final User userMap = UserMapper.INSTANCE.convertToUser(userUpdateInformationRequest);
 		final User user = findByEmail(email);
@@ -162,10 +179,11 @@ public class UserServiceImpl implements UserService {
 		userMap.setId(user.getId());
 		userMap.setPassword(user.getPassword());
 		userMap.setRole(user.getRole());
-		userMap.setName(userUpdateInformationRequest.getFull_name());
+		userMap.setFullname(userUpdateInformationRequest.getFull_name());
 		userRepository.save(userMap);
 
-		return new UpdateUserResponse(user.getId(),userUpdateInformationRequest.getFull_name(), userUpdateInformationRequest.getEmail(), user.getRole());
+		return new UpdateUserResponse(user.getId(), userUpdateInformationRequest.getFull_name(),
+				userUpdateInformationRequest.getEmail(), user.getRole());
 	}
 
 }

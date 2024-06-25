@@ -4,7 +4,7 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
-import com.gdsc.boilerplate.springboot.model.User;
+import com.gdsc.boilerplate.springboot.security.dto.UserPrinciple;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -17,39 +17,39 @@ public class JwtTokenManager {
 
 	private final JwtProperties jwtProperties;
 
-	public String generateToken(User user) {
+	public String generateToken(UserPrinciple userPrinciple) {
 
-		final String username = user.getEmail();
-		final String userRole = user.getRole().getName();
+		final Long userId = userPrinciple.getId();
 
 		//@formatter:off
 		return JWT.create()
-				.withSubject(username)
+				.withSubject(Long.toString(userId))
 				.withIssuer(jwtProperties.getIssuer())
-				.withClaim("role", userRole)
+//				.withClaim("roles", String.join(";", (CharSequence[]) userPrinciple.getAuthorities().toArray()))
 				.withIssuedAt(new Date())
 				.withExpiresAt(new Date(System.currentTimeMillis() + jwtProperties.getExpirationMinute() * 60 * 1000))
 				.sign(Algorithm.HMAC256(jwtProperties.getSecretKey().getBytes()));
 		//@formatter:on
 	}
 
-	public String getUsernameFromToken(String token) {
+	public Long getUserIdFromToken(String token) {
 
 		final DecodedJWT decodedJWT = getDecodedJWT(token);
 
-		return decodedJWT.getSubject();
+		return Long.parseLong(decodedJWT.getSubject());
 	}
+	
+	public boolean validateToken(String token, Long userId) {
 
-	public boolean validateToken(String token, String authenticatedUsername) {
+		final Long userIdFromToken = getUserIdFromToken(token);
 
-		final String usernameFromToken = getUsernameFromToken(token);
-
-		final boolean equalsUsername = usernameFromToken.equals(authenticatedUsername);
+		final boolean equalsUsername = userIdFromToken.equals(userId);
 		final boolean tokenExpired = isTokenExpired(token);
 
 		return equalsUsername && !tokenExpired;
 	}
 
+    
 	private boolean isTokenExpired(String token) {
 
 		final Date expirationDateFromToken = getExpirationDateFromToken(token);

@@ -1,5 +1,9 @@
 # Spring Boot Boilerplate
 
+<p align="center">
+  <a href="https://www.django-rest-framework.org/" target="blank"><img src="https://github.com/dscdut/java-spring-boilerplate/assets/92385045/2a8bc7c9-207b-4cbd-bba2-43151730731e" width="400" alt="Spring Boot Logo" /></a>
+</p>
+
 *Spring Boot Boilerplate* is a **starter kit** designed to help you quickly get started with building a Spring Boot application. This project provides a simple and useful template that incorporates various essential technologies and configurations.
 
 ## Technologies Used

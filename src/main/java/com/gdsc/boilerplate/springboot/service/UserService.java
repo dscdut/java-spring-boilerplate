@@ -17,13 +17,16 @@ public interface UserService {
 
 	RegistrationResponse registration(RegistrationRequest registrationRequest);
 
+	AuthenticatedUserDto findAuthenticatedUserById(Long id);
+
 	AuthenticatedUserDto findAuthenticatedUserByEmail(String email);
 
 	void deleteUserById(Long id);
 
 	UpdateUserResponse updateUser(Long id, UpdateUserRequest updateUserRequest);
 
-	UpdateUserResponse updateInformationByUser(String username, UserUpdateInformationRequest userUpdateInformationRequest);
+	UpdateUserResponse updateInformationByUser(String username,
+			UserUpdateInformationRequest userUpdateInformationRequest);
 
 	User findById(Long id);
 

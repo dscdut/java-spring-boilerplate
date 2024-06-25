@@ -4,12 +4,14 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import com.gdsc.boilerplate.springboot.model.User;
 import com.gdsc.boilerplate.springboot.security.dto.AuthenticatedUserDto;
 import com.gdsc.boilerplate.springboot.security.dto.LoginRequest;
 import com.gdsc.boilerplate.springboot.security.dto.LoginResponse;
+import com.gdsc.boilerplate.springboot.security.dto.UserPrinciple;
 import com.gdsc.boilerplate.springboot.security.mapper.AuthenticationMapper;
 import com.gdsc.boilerplate.springboot.service.UserService;
 
@@ -29,19 +31,16 @@ public class JwtTokenService {
 		final String email = loginRequest.getEmail();
 		final String password = loginRequest.getPassword();
 
-		final UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(email, password);
+		final UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
+				email, password);
 
-		authenticationManager.authenticate(usernamePasswordAuthenticationToken);
+		// Xác thực từ username và password.
+		Authentication authentication = authenticationManager.authenticate(usernamePasswordAuthenticationToken);
 
-		final AuthenticatedUserDto authenticatedUserDto = userService.findAuthenticatedUserByEmail(email);
+		UserPrinciple userPrinciple = (UserPrinciple) authentication.getPrincipal();
+		final String token = jwtTokenManager.generateToken(userPrinciple);
 
-		final User user = AuthenticationMapper.INSTANCE.convertToUser(authenticatedUserDto);
-
-		user.setRole(authenticatedUserDto.getRole());
-
-		final String token = jwtTokenManager.generateToken(user);
-
-		log.info("{} has successfully logged in!", user.getEmail());
+		log.info("{} has successfully logged in!", userPrinciple.getUsername());
 
 		return new LoginResponse(token);
 	}
