@@ -3,20 +3,19 @@ package com.gdsc.boilerplate.springboot.service;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import com.gdsc.boilerplate.springboot.dto.UpdateUserRequest;
-import com.gdsc.boilerplate.springboot.dto.UpdateUserResponse;
-import com.gdsc.boilerplate.springboot.dto.UserUpdateInformationRequest;
-import com.gdsc.boilerplate.springboot.exceptions.InvalidAuthenticationException;
+import com.gdsc.boilerplate.springboot.dto.request.UpdateUserRequest;
+import com.gdsc.boilerplate.springboot.dto.response.UpdateUserResponse;
+import com.gdsc.boilerplate.springboot.dto.request.UserUpdateInformationRequest;
+import com.gdsc.boilerplate.springboot.dto.response.UserInfoResponse;
+import com.gdsc.boilerplate.springboot.exceptions.*;
 import com.gdsc.boilerplate.springboot.security.service.RoleService;
+import com.gdsc.boilerplate.springboot.utils.ProjectConstants;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.gdsc.boilerplate.springboot.configuration.dto.PageDto;
-import com.gdsc.boilerplate.springboot.configuration.dto.user.UserDto;
-import com.gdsc.boilerplate.springboot.exceptions.InternalServerException;
-import com.gdsc.boilerplate.springboot.exceptions.UserIdNotExistsException;
 import com.gdsc.boilerplate.springboot.maper.user.UserMapper;
 import com.gdsc.boilerplate.springboot.model.User;
 import com.gdsc.boilerplate.springboot.repository.UserRepository;
@@ -100,21 +99,21 @@ public class UserServiceImpl implements UserService {
 
 
 	@Override
-	public PageDto<UserDto> getPage(Pageable pageable) {
+	public PageDto<UserInfoResponse> getPage(Pageable pageable) {
 		Page<User> page = userRepository.findAll(pageable);
-		PageDto<UserDto> pageDto = new PageDto<UserDto>();
+		PageDto<UserInfoResponse> pageDto = new PageDto<>();
 		pageDto.setTotal(page.getTotalElements());
-		pageDto.setData(page.getContent().stream().map(user -> UserMapper.INSTANCE.convertToUserDto(user))
+		pageDto.setData(page.getContent().stream().map(user -> UserMapper.INSTANCE.convertToUserInfoResponse(user))
 				.collect(Collectors.toList()));
 		return pageDto;
 	}
 
 	@Override
 	public void deleteUserById(Long id) {
-		final Optional<User> optionalUser = userRepository.findById(id);
+		User user = this.findById(id);
 
-		if (optionalUser.isEmpty()) {
-			throw new UserIdNotExistsException();
+		if(user.getRole().getName().equals(ProjectConstants.ROLE_ADMIN)) {
+			throw new UnauthorizedAdminDeleteOtherAdminsException();
 		}
 
 		try {

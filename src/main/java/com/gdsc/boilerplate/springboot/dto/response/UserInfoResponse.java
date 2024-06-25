@@ -1,4 +1,4 @@
-package com.gdsc.boilerplate.springboot.dto;
+package com.gdsc.boilerplate.springboot.dto.response;
 
 import com.gdsc.boilerplate.springboot.model.Role;
 import lombok.AllArgsConstructor;
@@ -10,9 +10,13 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class UpdateUserResponse {
+public class UserInfoResponse {
+
     private Long id;
+
     private String full_name;
+
     private String email;
+
     private Role role;
 }

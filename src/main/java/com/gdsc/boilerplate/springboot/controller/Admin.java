@@ -1,8 +1,8 @@
 package com.gdsc.boilerplate.springboot.controller;
 
 import com.gdsc.boilerplate.springboot.exceptions.*;
-import com.gdsc.boilerplate.springboot.dto.UpdateUserRequest;
-import com.gdsc.boilerplate.springboot.dto.UpdateUserResponse;
+import com.gdsc.boilerplate.springboot.dto.request.UpdateUserRequest;
+import com.gdsc.boilerplate.springboot.dto.response.UpdateUserResponse;
 import com.gdsc.boilerplate.springboot.service.UserService;
 import com.gdsc.boilerplate.springboot.utils.ExceptionMessageAccessor;
 import com.gdsc.boilerplate.springboot.utils.ValidationMessageAccessor;
@@ -12,14 +12,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Positive;
 
 @RestController
