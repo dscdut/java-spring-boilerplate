@@ -21,6 +21,6 @@ public interface UserMapper {
 
 	User convertToUser(UserUpdateInformationRequest userUpdateInformationRequest);
 
-	@Mapping(source = "user.name", target = "full_name")
+	@Mapping(source = "user.fullname", target = "full_name")
 	UserInfoResponse convertToUserInfoResponse(User user);
 }

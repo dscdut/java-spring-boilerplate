@@ -59,7 +59,7 @@ public class UserServiceImpl implements UserService {
 		final User user = AuthenticationMapper.INSTANCE.convertToUser(registrationRequest);
 		user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
 
-		final Role role = roleService.findByName("MEMBER");
+		final Role role = roleService.findByName(ProjectConstants.ROLE_MEMBER);
 		final Role roleMap = RoleMapper.INSTANCE.convertToRole(role.getId(), role.getName());
 
 		user.setRole(roleMap);
