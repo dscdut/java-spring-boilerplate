@@ -109,14 +109,14 @@ You can customize which endpoints are accessible without token information in th
  - Java: Ensure you have Java 11 or higher installed.
  - Maven: Make sure Maven is installed.
 
-### Start the Database
-First, make sure the database is up. If you're using Docker, you can use the following command to start the containers in detached mode:
+### Deploy with docker
+If you're using Docker, you can use the following command to start the containers in detached mode:
 
 ```sh
 docker-compose up -d
 ```
 
-If you have made changes in your local environment, use the local Docker Compose file:
+For *DEVELOPMENT*, if you have made changes in your local environment, use the local Docker Compose file :
 
 ```sh
 docker-compose -f local-docker-compose.yml up -d
