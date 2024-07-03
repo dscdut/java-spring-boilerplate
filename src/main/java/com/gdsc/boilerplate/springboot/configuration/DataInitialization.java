@@ -3,6 +3,7 @@ package com.gdsc.boilerplate.springboot.configuration;
 
 import com.gdsc.boilerplate.springboot.model.Role;
 import com.gdsc.boilerplate.springboot.repository.RoleRepository;
+import com.gdsc.boilerplate.springboot.utils.ProjectConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 
@@ -20,8 +21,8 @@ public class DataInitialization {
 
     @PostConstruct
     public void initData() {
-        createRoleIfNotExists("ADMIN");
-        createRoleIfNotExists("MEMBER");
+        createRoleIfNotExists(ProjectConstants.ROLE_ADMIN);
+        createRoleIfNotExists(ProjectConstants.ROLE_MEMBER);
     }
 
     private void createRoleIfNotExists(String userRole) {

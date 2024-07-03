@@ -3,9 +3,10 @@ package com.gdsc.boilerplate.springboot.controller;
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
 
+import com.gdsc.boilerplate.springboot.dto.response.UserInfoResponse;
 import com.gdsc.boilerplate.springboot.exceptions.InvalidSyntaxException;
-import com.gdsc.boilerplate.springboot.dto.UpdateUserResponse;
-import com.gdsc.boilerplate.springboot.dto.UserUpdateInformationRequest;
+import com.gdsc.boilerplate.springboot.dto.response.UpdateUserResponse;
+import com.gdsc.boilerplate.springboot.dto.request.UserUpdateInformationRequest;
 import com.gdsc.boilerplate.springboot.utils.ValidationMessageAccessor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -14,13 +15,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.annotation.Validated;
 
 import com.gdsc.boilerplate.springboot.configuration.dto.PageDto;
-import com.gdsc.boilerplate.springboot.configuration.dto.user.UserDto;
 import com.gdsc.boilerplate.springboot.service.UserService;
 import com.gdsc.boilerplate.springboot.utils.ExceptionMessageAccessor;
 import lombok.extern.slf4j.Slf4j;
@@ -44,7 +43,7 @@ public class User {
 	final private ValidationMessageAccessor validationMessageAccessor;
 
 	@GetMapping
-	public ResponseEntity<PageDto<UserDto>> filterUser(
+	public ResponseEntity<PageDto<UserInfoResponse>> filterUser(
 			@Positive(message = "{greater_zero}") @RequestParam(name = "page_size", required = false, defaultValue = DefaultConstants.DEFAULT_PAGE_SIZE) Integer pageSize,
 
 			@Positive(message = "{greater_zero}") @RequestParam(name = "page", required = false, defaultValue = DefaultConstants.DEFAULT_PAGE) Integer page) {

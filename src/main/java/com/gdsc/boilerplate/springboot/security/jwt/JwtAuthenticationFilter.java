@@ -4,14 +4,13 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import com.gdsc.boilerplate.springboot.security.dto.UserPrinciple;
 import com.gdsc.boilerplate.springboot.security.service.UserDetailsServiceImpl;
 import com.gdsc.boilerplate.springboot.security.utils.SecurityConstants;
 
@@ -42,13 +41,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 		}
 
 		final String header = req.getHeader(SecurityConstants.HEADER_STRING);
-		String username = null;
+		Long userId = null;
 		String authToken = null;
 		if (Objects.nonNull(header) && header.startsWith(SecurityConstants.TOKEN_PREFIX)) {
 
 			authToken = header.replace(SecurityConstants.TOKEN_PREFIX, StringUtils.EMPTY);
 			try {
-				username = jwtTokenManager.getUsernameFromToken(authToken);
+				userId = jwtTokenManager.getUserIdFromToken(authToken);
 			}
 			catch (Exception e) {
 				log.error("Authentication Exception : {}", e.getMessage());
@@ -57,15 +56,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
 		final SecurityContext securityContext = SecurityContextHolder.getContext();
 
-		if (Objects.nonNull(username) && Objects.isNull(securityContext.getAuthentication())) {
+		if (Objects.nonNull(userId) && Objects.isNull(securityContext.getAuthentication())) {
 
-			final UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+			final UserPrinciple userDetails = userDetailsService.loadUserByUserId(userId);
 
-			if (jwtTokenManager.validateToken(authToken, userDetails.getUsername())) {
+			if (jwtTokenManager.validateToken(authToken, userDetails.getId())) {
 
 				final UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
 				authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(req));
-				log.info("Authentication successful. Logged in username : {} ", username);
+				log.info("Authentication successful. Logged in userId : {} ", userId);
 				securityContext.setAuthentication(authentication);
 			}
 

@@ -97,4 +97,14 @@ public class GlobalControllerExceptionHandler {
 		return ResponseEntity.status(HttpStatus.CONFLICT).body(response);
 	}
 
+
+	@ExceptionHandler(UnauthorizedAdminDeleteOtherAdminsException.class)
+	@ResponseStatus(HttpStatus.FORBIDDEN)
+	ResponseEntity<ApiExceptionResponse> handleForbiddenException(UnauthorizedAdminDeleteOtherAdminsException exception) {
+		ApiExceptionResponse response = new ApiExceptionResponse(
+				ExceptionConstants.UNAUTHORIZED_ADMIN_DELETE_OTHER_ADMINS.getCode(),
+				accessor.getMessage(null, ExceptionConstants.UNAUTHORIZED_ADMIN_DELETE_OTHER_ADMINS.getMessageName()));
+		log.warn("UnauthorizedAdminDeleteOtherAdminsException: {}", response.getMessage());
+		return ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);
+	}
 }

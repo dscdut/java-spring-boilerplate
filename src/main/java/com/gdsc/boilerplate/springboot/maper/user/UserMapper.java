@@ -1,8 +1,10 @@
 package com.gdsc.boilerplate.springboot.maper.user;
 
-import com.gdsc.boilerplate.springboot.dto.UpdateUserRequest;
-import com.gdsc.boilerplate.springboot.dto.UserUpdateInformationRequest;
+import com.gdsc.boilerplate.springboot.dto.request.UpdateUserRequest;
+import com.gdsc.boilerplate.springboot.dto.request.UserUpdateInformationRequest;
+import com.gdsc.boilerplate.springboot.dto.response.UserInfoResponse;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.ReportingPolicy;
 import org.mapstruct.factory.Mappers;
 
@@ -19,4 +21,6 @@ public interface UserMapper {
 
 	User convertToUser(UserUpdateInformationRequest userUpdateInformationRequest);
 
+	@Mapping(source = "user.fullname", target = "full_name")
+	UserInfoResponse convertToUserInfoResponse(User user);
 }

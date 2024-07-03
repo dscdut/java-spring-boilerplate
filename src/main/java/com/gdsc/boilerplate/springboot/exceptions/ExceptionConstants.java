@@ -16,7 +16,9 @@ public enum ExceptionConstants {
 
 	ROLE_ID_NOT_EXISTS( 115, "not_found_role_id"),
 
-	ADMIN_UNAUTHORIZED(114,"admin_unauthorized");
+	ADMIN_UNAUTHORIZED(114,"admin_unauthorized"),
+
+	UNAUTHORIZED_ADMIN_DELETE_OTHER_ADMINS(113,"unauthorized_admin_delete_other_admins");
 
 
 	private final int code;

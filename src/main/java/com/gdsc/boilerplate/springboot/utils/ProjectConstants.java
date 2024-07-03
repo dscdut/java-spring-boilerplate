@@ -10,6 +10,10 @@ public final class ProjectConstants {
 
 	public static final Locale DEFAULT_LOCALE = Locale.ENGLISH;
 
+	public static final String ROLE_ADMIN = "ADMIN";
+
+	public static final String ROLE_MEMBER = "MEMBER";
+
 	private ProjectConstants() {
 
 		throw new UnsupportedOperationException();

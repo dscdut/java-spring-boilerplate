@@ -1,6 +1,5 @@
-package com.gdsc.boilerplate.springboot.dto;
+package com.gdsc.boilerplate.springboot.dto.request;
 
-import com.gdsc.boilerplate.springboot.model.Role;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,7 +9,7 @@ import lombok.ToString;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
-import io.swagger.annotations.ApiModelProperty;
+
 @Getter
 @Setter
 @ToString
