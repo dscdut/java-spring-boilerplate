@@ -146,7 +146,10 @@ Once the application is running, you can access the Swagger UI at:
 ```sh
 http://localhost:8080/api-docs
 ```
-
+## Design API
+```sh
+https://gdsc-boilerplate-swagger-docs-api-latest.onrender.com/
+```
 This provides interactive documentation for your API endpoints.
 
 ## License
