@@ -14,6 +14,10 @@ public final class ProjectConstants {
 
 	public static final String ROLE_MEMBER = "MEMBER";
 
+	public static final String CASH = "CASH";
+
+	public static final String MOMO = "MOMO";
+
 	private ProjectConstants() {
 
 		throw new UnsupportedOperationException();

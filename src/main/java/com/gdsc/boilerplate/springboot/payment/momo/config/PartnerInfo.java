@@ -1,16 +1,27 @@
 package com.gdsc.boilerplate.springboot.payment.momo.config;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
 public class PartnerInfo {
 
     private String accessKey;
     private String partnerCode;
     private String secretKey;
     private String publicKey;
+    private String returnUrl;
+    private String notifyUrl;
+    private String orderInfo;
 
-    public PartnerInfo(String partnerCode, String accessKey, String secretKey) {
+    public PartnerInfo(String partnerCode, String accessKey, String secretKey, String returnUrl, String notifyUrl, String orderInfo) {
         this.accessKey = accessKey;
         this.partnerCode = partnerCode;
         this.secretKey = secretKey;
+        this.returnUrl = returnUrl;
+        this.notifyUrl = notifyUrl;
+        this.orderInfo = orderInfo;
     }
 
     public PartnerInfo(String partnerCode, String accessKey, String secretKey, String publicKey) {
