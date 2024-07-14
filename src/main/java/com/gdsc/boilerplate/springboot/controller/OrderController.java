@@ -1,12 +1,12 @@
 package com.gdsc.boilerplate.springboot.controller;
 
 import com.gdsc.boilerplate.springboot.dto.request.CreateOrderRequest;
-import com.gdsc.boilerplate.springboot.security.annotation.AuthenticatedUser;
 import com.gdsc.boilerplate.springboot.security.dto.UserPrinciple;
 import com.gdsc.boilerplate.springboot.service.OrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,9 +24,8 @@ public class OrderController {
   @PostMapping
   @PreAuthorize("hasAuthority('MEMBER')")
   public ResponseEntity<?> createOrder(
-      @AuthenticatedUser UserPrinciple userPrinciple,
+      @AuthenticationPrincipal UserPrinciple userPrinciple,
       @Valid @RequestBody CreateOrderRequest createOrderRequest) throws Exception {
-
     return ResponseEntity.ok(orderService.createOrder(userPrinciple.getId(), createOrderRequest));
   }
 }
