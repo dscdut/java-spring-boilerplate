@@ -120,12 +120,6 @@ If you're using Docker, you can use the following command to start the container
 docker-compose up -d
 ```
 
-For *DEVELOPMENT*, if you have made changes in your local environment, use the local Docker Compose file :
-
-```sh
-docker-compose -f local-docker-compose.yml up -d
-```
-
 ## Build the Project
 Navigate to the root of the project and run the following command to build the project:
 
