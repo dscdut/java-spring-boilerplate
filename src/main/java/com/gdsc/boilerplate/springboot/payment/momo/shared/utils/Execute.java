@@ -1,5 +1,6 @@
 package com.gdsc.boilerplate.springboot.payment.momo.shared.utils;
 
+import lombok.extern.slf4j.Slf4j;
 import okhttp3.*;
 import okio.Buffer;
 
@@ -8,6 +9,7 @@ import java.io.IOException;
 import com.gdsc.boilerplate.springboot.payment.momo.models.HttpRequest;
 import com.gdsc.boilerplate.springboot.payment.momo.models.HttpResponse;
 
+@Slf4j
 public class Execute {
 
     OkHttpClient client = new OkHttpClient();
@@ -15,21 +17,20 @@ public class Execute {
     public HttpResponse sendToMoMo(String endpoint, String payload) {
 
         try {
-            LogUtils.init();
             HttpRequest httpRequest = new HttpRequest("POST", endpoint, payload, "application/json");
 
             Request request = createRequest(httpRequest);
 
-            LogUtils.debug("[HttpPostToMoMo] Endpoint:: " + httpRequest.getEndpoint() + ", RequestBody:: " + httpRequest.getPayload());
+            log.debug("[HttpPostToMoMo] Endpoint:: {}, RequestBody:: {}", httpRequest.getEndpoint(), httpRequest.getPayload());
 
             Response result = client.newCall(request).execute();
             HttpResponse response = new HttpResponse(result.code(), result.body().string(), result.headers());
 
-            LogUtils.info("[HttpResponseFromMoMo] " + response.toString());
+            log.info("[HttpResponseFromMoMo] {}", response.toString());
 
             return response;
         } catch (Exception e) {
-            LogUtils.error("[ExecuteSendToMoMo] "+ e);
+            log.error("[ExecuteSendToMoMo] {}", e);
         }
 
         return null;
