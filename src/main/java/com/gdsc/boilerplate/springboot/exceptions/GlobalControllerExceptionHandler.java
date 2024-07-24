@@ -107,4 +107,13 @@ public class GlobalControllerExceptionHandler {
 		log.warn("UnauthorizedAdminDeleteOtherAdminsException: {}", response.getMessage());
 		return ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);
 	}
+
+  @ExceptionHandler(OrderIdNotExistsException.class)
+  @ResponseStatus(HttpStatus.NOT_FOUND)
+  ResponseEntity<ApiExceptionResponse> handleOrderIdNotExistsException(OrderIdNotExistsException exception) {
+    final ApiExceptionResponse response = new ApiExceptionResponse(ExceptionConstants.ORDER_ID_NOT_EXISTS.getCode(),
+            accessor.getMessage(null, ExceptionConstants.ORDER_ID_NOT_EXISTS.getMessageName()));
+    log.warn("OrderIdNotExistsException: {}", response.getMessage());
+    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+  }
 }

@@ -18,7 +18,9 @@ public enum ExceptionConstants {
 
 	ADMIN_UNAUTHORIZED(114,"admin_unauthorized"),
 
-	UNAUTHORIZED_ADMIN_DELETE_OTHER_ADMINS(113,"unauthorized_admin_delete_other_admins");
+	UNAUTHORIZED_ADMIN_DELETE_OTHER_ADMINS(113,"unauthorized_admin_delete_other_admins"),
+
+	ORDER_ID_NOT_EXISTS(211, "not_found_order_id");
 
 
 	private final int code;
